@@ -1,5 +1,31 @@
 # Security System
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=git,docker,python,django,pytorch,tailwind" />
+  </a>
+</p>
+
 ___
+
+### Authors
+
+| Name               | GitHub Profile                                |
+|--------------------|-----------------------------------------------|
+| Andrzej Świętek    | [GitHub Profile](https://github.com/Andrzej-Swietek)   |
+| Marcin Knapczyk    | [GitHub Profile](https://github.com/Nautirius)|
+| Bartosz Biesaga    | [GitHub Profile](https://github.com/Bartosz-Biesaga)   |
+| Mateusz Wawrzyczek | [GitHub Profile](https://github.com/MateuszWawrzyczek)   |
+
+
+### Docker Ports
+
+| Service            | GitHub Profile                                         |
+|--------------------|--------------------------------------------------------|
+| Django             | :8000                                                  |
+| Postgres           | :5432                                                  |
+
+
+
 ### Starting app
 
 #### Locally:
@@ -38,6 +64,10 @@ python manage.py makemigrations authentication --name add_pgvector --empty
 python manage.py migrate
 ```
 
+### Reset DB
+```shell
+python manage.py flush
+```
 
 ### Create new application module
 ```shell
