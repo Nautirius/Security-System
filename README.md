@@ -38,7 +38,7 @@ python manage.py runserver
 
 #### Docker
 ```shell
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 
