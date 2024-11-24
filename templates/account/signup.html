@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - App{% endblock %}
+
+{% block content %}
+    <section class="min-h-screen flex justify-center items-center bg-gray-100" id="form-section">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+            {% url 'account_signup' as action_url %}
+            <form method="POST" class="space-y-4">
+                {% csrf_token %}
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                            placeholder="Enter email"
+                            value="{{ form.email.value|default:'' }}"
+                    />
+                    {% if form.email.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                            placeholder="Enter Password"
+                    />
+                    {% if form.password.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Confirm Password -->
+                <div>
+                    <label for="password_confirm" class="block text-sm font-medium text-gray-700">Repeat Password</label>
+                    <input
+                            type="password"
+                            name="password_confirm"
+                            id="password_confirm"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                            placeholder="Potwierdź hasło"
+                    />
+                    {% if form.password_confirm.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {% for error in form.password_confirm.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button
+                            type="submit"
+                            class="w-full bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                    >
+                        Sign Up
+                    </button>
+                </div>
+            </form>
+            <p class="mt-4 text-sm text-gray-600 text-center">
+                Already have an account? <a href="/auth/accounts/login" class="text-slate-600 hover:underline">Sign In</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}

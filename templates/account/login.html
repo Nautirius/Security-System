@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block content %}
+    <section class="min-h-screen flex justify-center items-center bg-gray-100 rounded-[20px]" id="form-section">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input
+                            type="email"
+                            name="login"
+                            id="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                            placeholder="Email"
+{#                            value="{{ form.login.value }}"#}
+                    />
+                    {% if form.login.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {% for error in form.login.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                            placeholder="Password"
+                    />
+                    {% if form.password.errors %}
+                        <p class="mt-1 text-sm text-red-600">
+                            {% for error in form.password.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="w-full">
+                    <button
+                            type="submit"
+                            class="w-full bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                    >
+                        Sign In
+                    </button>
+                </div>
+            </form>
+
+            <!-- GitHub Login -->
+            <div class="mt-4 w-full flex items-center justify-center">
+                <a href="{% provider_login_url 'github' %}" class="w-full bg-gray-800 text-white py-2 px-4 rounded-md text-center hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    <i class="fab fa-github"></i> Login via Github
+                </a>
+            </div>
+
+            <p class="mt-4 text-sm text-gray-600 text-center">
+                Dont't Have Account Yet? <a href="/auth/accounts/signup" class="text-slate-600 hover:underline">Sign Up</a>
+            </p>
+            <p class="mt-4 text-sm text-gray-600 text-center">
+                Forgot Password? <a href="/auth/accounts/password/reset" class="text-slate-600 hover:underline">Reset</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}
