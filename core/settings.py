@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'drf_yasg',
+    # 'django.contrib.sites',
 
     # AUTH
     "allauth",
@@ -128,6 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -166,9 +168,23 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "/auth/accounts/login"
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
         "APP": {
-            "client_id": "YOUR_CLIENT_ID",
-            "secret": "YOUR_CLIENT_SECRET",
+            "client_id": config('GITHUB_CLIENT_ID'),
+            "secret": config('GITHUB_CLIENT_SECRET'),
             "key": "",
         }
     }
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
 }
