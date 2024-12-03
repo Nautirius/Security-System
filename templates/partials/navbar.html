@@ -9,7 +9,7 @@
     <!-- Title -->
     <div class="text-lg font-bold absolute left-1/2 -translate-x-1/2">
         <a href="/">
-            <img class="h-[50px]" src="/favicon.png" alt="logo" />
+            <img class="h-[50px]" src="https://skillicons.dev/icons?i=py,django,pytorch" alt="logo" />
         </a>
     </div>
 
@@ -20,7 +20,8 @@
                 <p>
                     <a href="/my-profile" class="hover:text-primary transition font-bold">{{ user.email }}</a>
                 </p>
-                <a href="{'/auth/accounts/logout'%}" class="hover:text-primary transition font-bold">
+                <a href="{% url 'account_logout' %}" class="hover:text-primary transition font-bold">
+{#                <a href="{'/auth/accounts/logout'%}" class="hover:text-primary transition font-bold">#}
                     <button class="bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
                         Logout
                     </button>
