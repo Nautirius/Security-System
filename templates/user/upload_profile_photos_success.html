@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Successful Upload{% endblock %}
+
+
+<div class="max-w-2xl mx-auto text-center py-8">
+    <h1 class="text-2xl font-bold text-gray-800">Upload Successful!</h1>
+    <p class="mt-4 text-gray-600">{{ message }}</p>
+    <a href="{% url 'authentication:upload_images' %}" class="mt-6 inline-block px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">
+        Upload More Images
+    </a>
+    <a href="/dashboard" class="mt-6 inline-block px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700">
+        Go back to Dashboard
+    </a>
+</div>
