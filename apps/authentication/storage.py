@@ -4,7 +4,7 @@ from pathlib import Path
 
 class FileStorage:
     def __init__(self, base_dir=None):
-        self.base_dir = base_dir or settings.MEDIA_ROOT
+        self.base_dir = base_dir or settings.STORAGE_PATH
 
     def save_file(self, file, relative_path):
         full_path = Path(self.base_dir) / relative_path

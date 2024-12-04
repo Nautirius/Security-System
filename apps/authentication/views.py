@@ -23,7 +23,7 @@ def upload_images(request):
 
                 UserImage.objects.create(user=user, image_type=image_type, file_path=relative_path)
 
-        return redirect('upload_success')
+        return redirect('/auth/upload/success')
 
     return render(request, 'user/upload_profile_photos.html')
 
