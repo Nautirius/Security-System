@@ -1,3 +1,7 @@
+import logging
+from pprint import pformat
+
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
@@ -6,6 +10,8 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+
+from .forms import CustomSignupForm
 from .models import UserImage
 from .storage import FileStorage
 
@@ -29,9 +35,34 @@ def upload_images(request):
 
 
 @login_required
-def upload_success(request):
+def upload_success(request: HttpRequest):
     return render(
         request,
         'user/upload_profile_photos_success.html',
         {'message': 'Files uploaded successfully!'}
     )
+
+
+def signup(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        form = CustomSignupForm(request.POST)
+        try:
+            logging.info(request.POST)
+            if form.is_valid():
+                form.save(request)
+                return redirect('/auth/accounts/login')
+            else:
+                logging.error(f"Form errors: {form.errors}")
+                return render(request, 'account/signup.html', {'form': form})
+
+        except Exception as e:
+            logging.error("ERROR")
+            logging.error(pformat(request))
+            logging.error(e)
+            logging.error("\n\n" + "="*20+ '\n')
+            return render(request, 'account/signup.html', {'form': form})
+
+
+
+    form = CustomSignupForm()
+    return render(request, 'account/signup.html', {'form': form})

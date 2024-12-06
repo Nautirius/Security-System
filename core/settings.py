@@ -188,6 +188,10 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_SIGNUP_REDIRECT_URL = "/auth/accounts/login"
 
+ACCOUNT_FORMS = {
+    'signup': 'apps.authentication.forms.CustomSignupForm',
+}
+
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
         "APP": {
