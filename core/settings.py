@@ -14,9 +14,31 @@ from pathlib import Path
 
 from decouple import config
 
+import os
+import logging.config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Logs directory and log file path
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+LOG_FILE = os.path.join(LOGS_DIR, 'django.log')
+
+# Ensure logs directory and log file exist
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)
+if not os.path.exists(LOG_FILE):
+    with open(LOG_FILE, 'w'):
+        pass
+
+# Logging Configuration
+LOGGING_CONFIG = None  # Disable Django's default logging setup
+LOGGING_CONF_FILE = os.path.join(BASE_DIR, 'logging.conf')
+
+if os.path.exists(LOGGING_CONF_FILE):
+    logging.config.fileConfig(LOGGING_CONF_FILE)
+else:
+    print("Logging configuration file not found.")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -39,6 +61,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'drf_yasg',
+    # 'django.contrib.sites',
+
+    # AUTH
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    'allauth.socialaccount.providers.github',
 
     'apps.authentication',
     'apps.buildings',
@@ -55,6 +85,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    # AUTH
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -62,7 +95,9 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            BASE_DIR / "templates",
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -116,6 +151,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -133,8 +169,49 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STORAGE_PATH = BASE_DIR / "storage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_SIGNUP_REDIRECT_URL = "/auth/accounts/login"
+
+ACCOUNT_FORMS = {
+    'signup': 'apps.authentication.forms.CustomSignupForm',
+}
+
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "APP": {
+            "client_id": config('GITHUB_CLIENT_ID'),
+            "secret": config('GITHUB_CLIENT_SECRET'),
+            "key": "",
+        }
+    }
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}

@@ -1,0 +1,43 @@
+<nav class="relative mx-8 mb-24 flex items-center justify-between pb-6 pt-12 font-medium md:mx-16 lg:mx-32">
+    <!-- Logo Section -->
+    <div class="flex gap-12">
+        <div class="hidden xl:flex items-center gap-4">
+            <!-- Logo or extra elements for desktop version -->
+        </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-lg font-bold absolute left-1/2 -translate-x-1/2">
+        <a href="/">
+            <img class="h-[50px]" src="https://skillicons.dev/icons?i=py,django,pytorch" alt="logo" />
+        </a>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex items-center gap-12">
+        {% if user.is_authenticated %}
+            <div class="hover:text-primary transition flex flex-row items-center gap-4 font-bold">
+                <p>
+                    <a href="/my-profile" class="hover:text-primary transition font-bold">{{ user.email }}</a>
+                </p>
+                <a href="{% url 'account_logout' %}" class="hover:text-primary transition font-bold">
+{#                <a href="{'/auth/accounts/logout'%}" class="hover:text-primary transition font-bold">#}
+                    <button class="bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
+                        Logout
+                    </button>
+                </a>
+            </div>
+        {% else %}
+            <a href="/auth/accounts/login" class="hover:text-primary transition font-bold">
+                <button class="bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
+                    Login
+                </button>
+            </a>
+            <a href="/auth/accounts/signup" class="hover:text-primary transition font-bold">
+                <button class="bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
+                    Register
+                </button>
+            </a>
+        {% endif %}
+    </div>
+</nav>

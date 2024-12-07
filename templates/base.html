@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}App{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+
+
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 font-sans leading-normal tracking-wider">
+
+<header
+    class="h-[{% if 'login' in request.path or 'signup' in request.path  %}10dvh{% else %}100dvh{% endif %}] rounded-[20px] m-8 bg-slate-200"
+>
+    {% include 'partials/navbar.html' %}
+</header>
+
+
+<main class="w-full mx-auto py-0 px-4">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="bg-slate-600 text-white py-4 mt-8">
+    <div class="max-w-7xl mx-auto text-center">
+        <p>&copy; 2024 All Right Reserved</p>
+    </div>
+</footer>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

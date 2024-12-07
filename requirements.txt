@@ -3,3 +3,6 @@ djangorestframework
 psycopg2-binary
 pgvector
 python-decouple
+django-allauth
+django-allauth[socialaccount]
+drf_yasg
