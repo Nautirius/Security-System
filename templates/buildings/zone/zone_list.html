@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Zone List{% endblock %}
+
+{% block content %}
+    {% load socialaccount %}
+
+    <section class="min-h-screen flex flex-col items-center bg-gray-100">
+        <h2 class="text-2xl font-bold mb-6 text-center">
+            <a href="{% url 'zone_create' %}">Add a New Zone</a>
+        </h2>
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for zone in zones %}
+                  <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex min-w-0 gap-x-4">
+                      <div class="min-w-0 flex-auto">
+                        <p class="text-sm/6 font-semibold text-gray-900">{{ zone.id }} {{ zone.building_id.label }}</p>
+    {#                    <p class="mt-1 truncate text-xs/5 text-gray-500">leslie.alexander@example.com</p>#}
+                      </div>
+                    </div>
+                    <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                        <a class="text-sm/6 text-gray-900" href="{% url 'zone_update' zone.id %}">Edit</a>
+                        <a class="text-sm/6 text-gray-900" href="{% url 'zone_delete' zone.id %}">Delete</a>
+                    </div>
+                  </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+
