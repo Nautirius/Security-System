@@ -1,0 +1,47 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} Uploaded User Images {% endblock %}
+
+{% block dashboard_content %}
+
+<div class="w-full min-h-[100vh] flex items-center justify-center flex-row flex-wrap">
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full">
+            <h2> Face </h2>
+        </header>
+        {% for image in face_images %}
+            <div class="md:col-span-6 xl:col-span-4 relative overflow-hidden rounded-lg">
+                <img
+                    src="http://localhost:8000/auth/user-photo/{{ image.file_path }}" alt="Face Image"
+                    class="w-full h-full max-h-[500px] object-cover object-center rounded-lg border cursor-pointer"
+                    loading="lazy"
+                />
+                <p class="absolute text-center mx-4 w-[calc(100%-2rem)] bg-[rgba(254,254,254,.7)] bottom-2 mt-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-800"> {{ image.file_path }} </p>
+            </div>
+        {% empty %}
+            <p class="px-4 py-2">No face images uploaded</p>
+        {% endfor %}
+    </section>
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full">
+            <h2> Silhouette </h2>
+        </header>
+        {% for image in silhouette_images %}
+            <div class="md:col-span-6 xl:col-span-4 relative overflow-hidden rounded-lg cursor-pointer">
+                <img
+                    src="http://localhost:8000/auth/user-photo/{{ image.file_path }}" alt="Face Image"
+                    class="w-full h-full max-h-[500px] object-cover object-center rounded-lg border"
+                    loading="lazy"
+                />
+                <p class="absolute text-center mx-4 w-[calc(100%-2rem)] bg-[rgba(254,254,254,.7)] bottom-2 mt-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-800"> {{ image.file_path }} </p>
+            </div>
+        {% empty %}
+            <p>No silhouette images uploaded</p>
+        {% endfor %}
+    </section>
+
+</div>
+
+{% endblock %}

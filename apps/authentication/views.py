@@ -1,10 +1,14 @@
 import logging
+import os
 from pprint import pformat
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
-# Create your views here.
+from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 from django.shortcuts import render, redirect
@@ -66,3 +70,41 @@ def signup(request: HttpRequest) -> HttpResponse:
 
     form = CustomSignupForm()
     return render(request, 'account/signup.html', {'form': form})
+
+
+@login_required
+def uploaded_profile_photos(request: HttpRequest) -> HttpResponse:
+    if request.method == 'POST':
+        return redirect('/dashboard')
+
+    user = request.user
+    face_images = user.images.filter(image_type='face')
+    silhouette_images = user.images.filter(image_type='silhouette')
+
+    return render(request, 'user/user_uploaded_photos.html', {
+        'face_images': face_images,
+        'silhouette_images': silhouette_images
+    })
+
+@api_view(['GET'])
+def user_photo(request,  folder_name: str, photo_type: str, name: str):
+    if not request.user.is_authenticated:
+        return Response({"error": "User not authenticated"}, status=403)
+
+    try:
+        folder_owner_id = folder_name.split('_')[-1]
+        storage = FileStorage()
+        # if folder_owner_id != request.user.id:
+        #     return Response({"error": "Permission denied"}, status=404)
+
+        # photo = get_object_or_404(UserImage, user=request.user, name=f'{folder_name}/{photo_type}/{name}')
+        photo = UserImage.objects.get(file_path=f'{folder_name}/{photo_type}/{name}')
+        file_full_path = storage.get_file_path(photo.file_path)
+
+    except UserImage.DoesNotExist:
+        return Response({"error": "Photo not found or permission denied"}, status=404)
+
+    if not os.path.exists(file_full_path):
+        return Response({"error": "File not found"}, status=404)
+
+    return FileResponse(open(file_full_path, 'rb'), as_attachment=True)
