@@ -10,7 +10,7 @@
             <h2> Actions Panel </h2>
         </header>
 
-        {% with url='/user_management/all/' text='List Of all Users' description='Here you can upload face and silhouette images' %}
+        {% with url='/user_management/all' text='List Of all Users' description='Here you can upload face and silhouette images' %}
             {% include 'partials/clickable_card.html' with url=url text=text description=description %}
         {% endwith %}
 
