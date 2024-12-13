@@ -8,8 +8,16 @@ from pgvector.django import VectorField
 class UserProfile(models.Model):
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=50)
+    email = models.EmailField(max_length=150)
+    phone = models.CharField(max_length=50, default="")
+    street = models.CharField(max_length=50, default="")
+    city = models.CharField(max_length=50, default="")
+    zip_code = models.CharField(max_length=6, default="")
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
 
 
 class UserImage(models.Model):

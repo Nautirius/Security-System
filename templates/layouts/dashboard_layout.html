@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+    <div class="grid grid-cols-12">
+        {% include 'partials/sidebar.html' %}
+
+        <div class="col-span-full h-auto md:col-span-8 px-8 pt-8 items-start">
+
+            {% block dashboard_content %}{% endblock %}
+
+        </div>
+    </div>
+
+{% endblock %}

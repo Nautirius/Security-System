@@ -14,9 +14,31 @@ from pathlib import Path
 
 from decouple import config
 
+import os
+import logging.config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Logs directory and log file path
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+LOG_FILE = os.path.join(LOGS_DIR, 'django.log')
+
+# Ensure logs directory and log file exist
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)
+if not os.path.exists(LOG_FILE):
+    with open(LOG_FILE, 'w'):
+        pass
+
+# Logging Configuration
+LOGGING_CONFIG = None  # Disable Django's default logging setup
+LOGGING_CONF_FILE = os.path.join(BASE_DIR, 'logging.conf')
+
+if os.path.exists(LOGGING_CONF_FILE):
+    logging.config.fileConfig(LOGGING_CONF_FILE)
+else:
+    print("Logging configuration file not found.")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -162,9 +184,13 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/dashboard"
+LOGOUT_REDIRECT_URL = "/auth/accounts/login"
 ACCOUNT_SIGNUP_REDIRECT_URL = "/auth/accounts/login"
+
+ACCOUNT_FORMS = {
+    'signup': 'apps.authentication.forms.CustomSignupForm',
+}
 
 SOCIALACCOUNT_PROVIDERS = {
     "github": {
