@@ -1,16 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'layouts/dashboard_layout.html' %}
 {% load socialaccount %}
 
 {% block title %} Dashboard {% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
 
-    <div class="grid grid-cols-12">
-        {% include 'partials/sidebar.html' %}
 
-        <div class="col-span-full h-auto md:col-span-8 px-8 pt-8 items-start">
             {% include 'partials/dashboard-header.html' with title="Dashboard" subtitle="Welcome to your workspace" %}
-
 
             <section class="w-full grid gap-4 grid-cols-12 mt-16">
                 <header class="col-span-full">
@@ -18,6 +14,10 @@
                 </header>
 
                 {% with url='/auth/upload/' text='Upload Images' description='Here you can upload face and silhouette images' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+
+                {% with url='/auth/upload/' text='My Uploaded Images' description='Here you can see your uploaded photos' %}
                     {% include 'partials/clickable_card.html' with url=url text=text description=description %}
                 {% endwith %}
 
@@ -42,6 +42,4 @@
                 {% endwith %}
             </section>
 
-        </div>
-    </div>
 {% endblock %}
