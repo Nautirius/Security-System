@@ -17,11 +17,11 @@
                     {% include 'partials/clickable_card.html' with url=url text=text description=description %}
                 {% endwith %}
 
-                {% with url='/auth/upload/' text='My Uploaded Images' description='Here you can see your uploaded photos' %}
+                {% with url='/auth/uploaded-photos-list/' text='My Uploaded Images' description='Here you can see your uploaded photos' %}
                     {% include 'partials/clickable_card.html' with url=url text=text description=description %}
                 {% endwith %}
 
-                {% with url='/details/1' text='User Management' description='This is a description for card 1.' %}
+                {% with url='/user_management/' text='User Management' description='This is a description for card 1.' %}
                     {% include 'partials/clickable_card.html' with url=url text=text description=description %}
                 {% endwith %}
 

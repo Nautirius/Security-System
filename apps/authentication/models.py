@@ -26,7 +26,7 @@ class UserImage(models.Model):
         ('silhouette', 'Silhouette'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
     image_type = models.CharField(max_length=10, choices=IMAGE_TYPE_CHOICES)
     file_path = models.TextField()
     embedding = VectorField(null=True, blank=True) # TODO : EMBEDDINGS ??
