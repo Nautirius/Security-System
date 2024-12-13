@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Permissions{% endblock %}
+
+{% block content %}
+<ul>
+<li><a href="{% url 'create-permission' %}"> Create new permission</a></li>
+<li><a href="{% url 'list-permissions' %}"> List permissions</a></li>
+</ul>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Permissions{% endblock %}
+
+{% block content %}
+{% for permission in permissions%}
+{{permission.label}} <a href="{% url 'update-permission' permission.id %}">
+    update
+</a>
+<a href="{% url 'delete-permission' permission.id %}">
+    delete
+</a>
+<div style="display:grid; grid-template-columns: 1fr 1fr">
+    <div>
+        <ul>
+        {% for zone in permission.zones.all %}
+            <li>{{ zone }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div>
+    <ul>
+    {% for user in permission.users.all %}
+        <li>{{ user }}</li>
+    {% endfor %}
+    </ul>
+    </div>
+    <hr>
+</div>
+{% endfor %}
+{% endblock %}
