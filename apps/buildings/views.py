@@ -19,7 +19,7 @@ def company_create(request):
         if name:
             company = Company(name=name)
             company.save()
-            return redirect('company_list')
+        return redirect('company_list')
     else:
         return render(request, 'buildings/company/company_create.html')
 
@@ -53,12 +53,13 @@ def building_create(request):
         label = request.POST['label']
         company_id = request.POST['company_id']
         company = Company.objects.get(pk=company_id)
-        if label and company_id and company:
-            building = Building(label=label, company_id=company)  # TODO: naming changes
+        if label and company:
+            building = Building(label=label, company=company)
             building.save()
         return redirect('building_list')
     else:
-        return render(request, 'buildings/building/building_create.html')
+        companies = Company.objects.all()
+        return render(request, 'buildings/building/building_create.html', {'companies': companies})
 
 
 def building_update(request, pk):
@@ -67,13 +68,15 @@ def building_update(request, pk):
         label = request.POST['label']
         company_id = request.POST['company_id']
         company = Company.objects.get(pk=company_id)
-        if label and company_id and company:
+        if label  and company:
             building.label = label
             building.company = company
             building.save()
         return redirect('building_list')
     else:
-        return render(request, 'buildings/building/building_update.html', {'building_id': pk, 'old_building': building})
+        companies = Company.objects.all()
+        return render(request, 'buildings/building/building_update.html', {'building_id': pk, 'old_building': building,
+                                                                           'companies': companies})
 
 
 def building_delete(request, pk):
@@ -90,27 +93,33 @@ def zone_list(request):
 
 def zone_create(request):
     if request.method == 'POST':
+        label = request.POST['label']
         building_id = request.POST['building_id']
         building = Building.objects.get(pk=building_id)
-        if building_id and building:
-            zone = Zone(building_id=building)  # TODO: naming changes
+        if label and building:
+            zone = Zone(label=label, building=building)
             zone.save()
         return redirect('zone_list')
     else:
-        return render(request, 'buildings/zone/zone_create.html')
+        buildings = Building.objects.all()
+        return render(request, 'buildings/zone/zone_create.html', {'buildings': buildings})
 
 
 def zone_update(request, pk):
     zone = get_object_or_404(Zone, pk=pk)
     if request.method == 'POST':
+        label = request.POST['label']
         building_id = request.POST['building_id']
         building = Building.objects.get(pk=building_id)
-        if building_id and building:
-            zone.building_id = building
+        if label and building:
+            zone.label = label
+            zone.building = building
             zone.save()
         return redirect('zone_list')
     else:
-        return render(request, 'buildings/zone/zone_update.html', {'zone_id': pk, 'old_zone': zone})
+        buildings = Building.objects.all()
+        return render(request, 'buildings/zone/zone_update.html', {'zone_id': pk, 'old_zone': zone,
+                                                                   'buildings': buildings})
 
 
 def zone_delete(request, pk):

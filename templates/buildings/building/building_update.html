@@ -5,10 +5,16 @@
 {% block content %}
     {% load socialaccount %}
 
-    <section class="min-h-screen flex justify-center items-center bg-gray-100" id="form-section">
+    <section class="min-h-screen flex flex-col justify-center items-center bg-gray-100" id="form-section">
+        <a class="text-sm/6 w-full bg-slate-600 max-w-md mb-5 text-center text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+           href="{% url 'building_list' %}"
+        >
+            <- Go back
+        </a>
         <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+
             <h2 class="text-2xl font-bold mb-6 text-center">Update Building</h2>
-            <form method="POST" action="/buildings/buildings/{{ old_building.id }}/update/" class="space-y-4">
+            <form id="update-form" method="POST" action="/buildings/buildings/{{ old_building.id }}/update/" class="space-y-4">
                 {% csrf_token %}
                 <div>
                     <label for="label" class="block text-sm font-medium text-gray-700">Label</label>
@@ -21,20 +27,17 @@
                     />
                 </div>
                 <div>
-                    <label for="company_id" class="block text-sm font-medium text-gray-700">Company id</label>
-                    <input
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
-                        type="text"
-                        name="company_id"
-                        value="{{ old_building.company.id }}"
-                        required id="company_id"
-                    />
+                    <label for="company_id" class="block text-sm font-medium text-gray-700">Company</label>
+                    <select name="company_id" id="company_id" form="update-form" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
+                        {% for company in companies %}
+                                <option value={{ company.id }} {% if company.id == old_building.company.id %} selected {% endif %}>
+                                    {{ company.id }} - {{ company.name }}
+                                </option>
+                        {% endfor %}
+                    </select>
                 </div>
                 <div>
-                    <button
-                        type="submit"
-                        class="w-full bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
-                    >
+                    <button type="submit" class="w-full bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500">
                         Update
                     </button>
                 </div>
