@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Building List{% endblock %}
+
+{% block content %}
+    {% load socialaccount %}
+
+    <section class="min-h-screen flex flex-col items-center bg-gray-100">
+        <a class="text-sm/6 w-full bg-slate-600 max-w-md mb-5 text-center text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+           href="{% url 'dashboard' %}"
+        >
+            <- Go back
+        </a>
+        <h2 class="text-2xl font-bold mb-6 text-center">
+            <a href="{% url 'building_create' %}">Add a New Building</a>
+        </h2>
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for building in buildings %}
+                  <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex min-w-0 gap-x-4">
+                      <div class="min-w-0 flex-auto">
+                        <p class="text-sm/6 font-semibold text-gray-900">{{ building.label }} (company {{ building.company.name }})</p>
+    {#                    <p class="mt-1 truncate text-xs/5 text-gray-500">leslie.alexander@example.com</p>#}
+                      </div>
+                    </div>
+                    <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                        <a class="text-sm/6 text-gray-900" href="{% url 'building_update' building.id %}">Edit</a>
+                        <a class="text-sm/6 text-gray-900" href="{% url 'building_delete' building.id %}">Delete</a>
+                    </div>
+                  </li>
+                {% empty %}
+                    <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex min-w-0 gap-x-4">
+                      <div class="min-w-0 flex-auto">
+                        <p class="text-sm/6 font-semibold text-gray-900">No Buildings to display</p>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endblock %}
