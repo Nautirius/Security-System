@@ -68,7 +68,7 @@ def building_update(request, pk):
         label = request.POST['label']
         company_id = request.POST['company_id']
         company = Company.objects.get(pk=company_id)
-        if label  and company:
+        if label and company:
             building.label = label
             building.company = company
             building.save()

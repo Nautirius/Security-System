@@ -29,6 +29,14 @@
                         <a class="text-sm/6 text-gray-900" href="{% url 'zone_delete' zone.id %}">Delete</a>
                     </div>
                   </li>
+                {% empty %}
+                    <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex min-w-0 gap-x-4">
+                      <div class="min-w-0 flex-auto">
+                        <p class="text-sm/6 font-semibold text-gray-900">No Zones to display</p>
+                      </div>
+                    </div>
+                  </li>
                 {% endfor %}
             </ul>
         </div>

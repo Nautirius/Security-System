@@ -38,6 +38,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("apps.authentication.urls")),
     path("buildings/", include("apps.buildings.urls")),
+    path("cameras/", include("apps.cameras.urls")),
 
     # SWAGGER DOCS
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
