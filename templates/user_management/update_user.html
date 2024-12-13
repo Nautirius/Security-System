@@ -1,0 +1,16 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} User Management {% endblock %}
+
+{% block dashboard_content %}
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full flex flex-row justify-between px-8">
+            <h2> Update User </h2>
+            <div class="whitespace-nowrap px-4 py-2 text-gray-700 border rounded-lg">
+                <a href="/user_management/all">
+                    <button> Go Back </button>
+                </a>
+            </div>
+        </header>
+    </section>
+{%  endblock  %}

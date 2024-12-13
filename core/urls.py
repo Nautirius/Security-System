@@ -41,6 +41,7 @@ def dashboard_view(request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("apps.authentication.urls")),
+    path("user_management/", include("apps.user_management.urls")),
 
     path("dashboard/", dashboard_view, name="dashboard"),
 

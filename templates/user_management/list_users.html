@@ -1,0 +1,133 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} User Management {% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="Users Management" subtitle="Welcome to your workspace" %}
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full flex flex-row justify-between px-8">
+            <h2> List Users </h2>
+            <div class="whitespace-nowrap px-4 py-2 text-gray-700 border rounded-lg">
+                <a href="/user_management/create_user">
+                    <button> Create User </button>
+                </a>
+            </div>
+        </header>
+
+        <div class="rounded-lg border border-gray-200 col-span-full">
+            <div class="overflow-x-auto rounded-t-lg">
+                <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                    <thead class="text-left">
+                        <tr>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Name</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Lastname</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Email</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Phone</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Company</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Details</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+                    {% for user in users %}
+                        <tr data-user-id="{{ user.id }}">
+                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{ user.profile.first_name }}</td>
+                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{ user.profile.last_name }}</td>
+                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ user.profile.email }}</td>
+                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ user.profile.phone }}</td>
+                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">Company</td>
+                            <td class="whitespace-nowrap px-4 py-4 text-gray-700">
+                                <a class="px-4 py-2 border rounded-lg " href="/user_management/by_id/{{ user.id }}"> <button> Details </button></a>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                <a class="px-4 py-2 border rounded-lg" href="/user_management/edit/{{ user.id }}"> <button> Edit </button></a>
+                                <a class="px-4 py-2 border rounded-lg" href="/user_management/delete/{{ user.id }}"> <button> Delete </button></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="rounded-b-lg border-t border-gray-200 px-4 py-2">
+                <ol class="flex justify-end gap-1 text-xs font-medium">
+                    <li>
+                        <a
+                                href="#"
+                                class="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+                        >
+                            <span class="sr-only">Prev Page</span>
+                            <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-3"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                            >
+                                <path
+                                        fill-rule="evenodd"
+                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"
+                                />
+                            </svg>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                                href="#"
+                                class="block size-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900"
+                        >
+                            1
+                        </a>
+                    </li>
+
+                    <li class="block size-8 rounded border-slate-600 bg-slate-600 text-center leading-8 text-white">
+                        2
+                    </li>
+
+                    <li>
+                        <a
+                                href="#"
+                                class="block size-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900"
+                        >
+                            3
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                                href="#"
+                                class="block size-8 rounded border border-gray-100 bg-white text-center leading-8 text-gray-900"
+                        >
+                            4
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                                href="#"
+                                class="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+                        >
+                            <span class="sr-only">Next Page</span>
+                            <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="size-3"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                            >
+                                <path
+                                        fill-rule="evenodd"
+                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                        clip-rule="evenodd"
+                                />
+                            </svg>
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+    </section>
+{%  endblock  %}

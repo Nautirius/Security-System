@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'apps.cameras',
     'apps.recognition',
     'apps.companies',
+    'apps.user_management',
 ]
 
 MIDDLEWARE = [
