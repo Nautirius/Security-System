@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+    <div class="grid grid-cols-12">
+        {% include 'partials/sidebar.html' %}
+
+        <div class="col-span-full h-auto md:col-span-8 px-8 pt-8 items-start">
+            {% include 'partials/dashboard-header.html' with title="Dashboard" subtitle="Welcome to your workspace" %}
+
+
+            <section class="w-full grid gap-4 grid-cols-12 mt-16">
+                <header class="col-span-full">
+                    <h2> Actions Panel </h2>
+                </header>
+
+                {% with url='/auth/upload/' text='Upload Images' description='Here you can upload face and silhouette images' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+
+                {% with url='/details/1' text='User Management' description='This is a description for card 1.' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+
+                {% with url='/details/1' text='Building Management' description='This is a description for card 1.' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+
+                {% with url='/details/1' text='Permissions Management' description='This is a description for card 1.' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+
+                {% with url='/details/1' text='Camera Management' description='This is a description for card 1.' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+
+                {% with url='/details/1' text='Company Management' description='This is a description for card 1.' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+            </section>
+
+        </div>
+    </div>
+{% endblock %}

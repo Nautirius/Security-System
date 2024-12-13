@@ -13,8 +13,12 @@
 </head>
 <body class="bg-gray-50 font-sans leading-normal tracking-wider">
 
+{#<header#}
+{#    class="h-[{% if 'login' in request.path or 'signup' in request.path  %}10dvh{% else %}100dvh{% endif %}] rounded-[20px] m-8 bg-slate-200"#}
+{#>#}
+
 <header
-    class="h-[{% if 'login' in request.path or 'signup' in request.path  %}10dvh{% else %}100dvh{% endif %}] rounded-[20px] m-8 bg-slate-200"
+        class="h-[10dvh] rounded-[20px] m-8 bg-slate-200"
 >
     {% include 'partials/navbar.html' %}
 </header>
