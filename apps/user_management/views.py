@@ -65,4 +65,11 @@ def delete_user(request: HttpRequest, pk: int) -> HttpResponse:
 
 
 def user_by_id(request: HttpRequest, pk: int) -> HttpResponse:
-    return redirect('list_users') # TODO:
+    user = get_object_or_404(User, pk=pk)
+    if user:
+        return render(
+            request,
+            'user_management/user_details.html',
+            { user: user }
+        )
+    return redirect('list_users')
