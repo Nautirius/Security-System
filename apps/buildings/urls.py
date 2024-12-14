@@ -9,6 +9,10 @@ urlpatterns = [
     path('companies/<int:pk>/update/', views.company_update, name='company_update'),
     path('companies/<int:pk>/delete/', views.company_delete, name='company_delete'),
     path('companies/assign_user_to_company/', views.assign_user_to_company, name='assign_user_to_company'),
+    path('companies/by-id/<int:pk>/', views.company_by_id, name='company_by_id'),
+    path('companies/fire-user/<int:company_id>/<int:user_id>/', views.company_fire_user, name='fire_user_from_company'),
+    path('companies/promote-user/<int:company_id>/<int:user_id>/', views.company_promote_user, name='promote_user_at_company'),
+    path('companies/degrade-user/<int:company_id>/<int:user_id>/', views.company_degrade_user, name='degrade_user_at_company'),
 
     path('buildings/', views.building_list, name='building_list'),
     path('buildings/home/', views.buildings_home, name='building_home'),

@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -6,19 +8,31 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
 from django.contrib import messages
 
-from ..authentication.models import Membership
+from ..authentication.models import Membership, UserProfile
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/home.html')
 
 def company_home(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/company/home.html')
 
-def company_list(request):
+def company_list(request: HttpRequest) -> HttpResponse:
     companies = Company.objects.all()
     return render(request, 'buildings/company/company_list.html', {'companies': companies})
 
+def company_by_id(request: HttpRequest, pk: int) -> HttpResponse:
+    company = get_object_or_404(Company, pk=pk)
+    employees = company.get_all_employees()
+
+    employees_with_roles = [
+        {"user": membership.user_profile, "role": membership.role} for membership in employees
+    ]
+    return render(
+            request,
+            'buildings/company/company_by_id.html',
+            {'pk': pk , "company": company, "employees_with_roles": employees_with_roles},
+        )
 
 def company_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
@@ -93,6 +107,41 @@ def company_delete(request: HttpRequest, pk: int) -> HttpResponse:
     if company:
         company.delete()
     return redirect('company_list')
+
+
+def company_fire_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
+    company = get_object_or_404(Company, pk=company_id)
+    user = get_object_or_404(User, id=user_id)
+    logging.info(f"FIRE WORKER: [{user.email}]  FROM {company.name}")
+    membership = Membership.objects.filter(company=company, user_profile=user.profile).first()
+    logging.info(membership)
+    if membership:
+        membership.delete()
+
+    return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
+
+
+def company_promote_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
+    company = get_object_or_404(Company, pk=company_id)
+    user = get_object_or_404(User, id=user_id)
+
+    membership = Membership.objects.filter(company=company, user_profile=user.profile).first()
+    if membership:
+        membership.role = 'MANAGEMENT'
+        membership.save()
+
+    return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
+
+def company_degrade_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
+    company = get_object_or_404(Company, pk=company_id)
+    user = get_object_or_404(User, id=user_id)
+
+    membership = Membership.objects.filter(company=company, user_profile=user.profile).first()
+    if membership:
+        membership.role = 'EMPLOYEE'
+        membership.save()
+
+    return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
 
 
 def buildings_home(request: HttpRequest) -> HttpResponse:
@@ -186,3 +235,5 @@ def zone_delete(request: HttpRequest, pk: int) -> HttpResponse:
     if zone:
         zone.delete()
     return redirect('zone_list')
+
+

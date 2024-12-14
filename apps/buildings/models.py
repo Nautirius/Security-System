@@ -1,5 +1,7 @@
 from django.db import models
 
+
+
 class Company(models.Model):
     name = models.CharField(max_length=255)
 
@@ -7,19 +9,22 @@ class Company(models.Model):
         return self.name
 
     def get_all_employees(self):
-        from django.contrib.auth.models import User
-        return list(User.objects.filter(memberships__company=self))
+        from apps.authentication.models import Membership
+        employees = Membership.objects.filter(company=self).select_related('user_profile')
+        return list(employees)
 
     def get_all_employees_with_roles(self):
-        memberships = self.memberships.select_related('user')
+        from apps.authentication.models import Membership
+        memberships = Membership.objects.filter(company=self).select_related('user_profile')
         return [
             {'user': membership.user, 'role': membership.role} for membership in memberships
         ]
 
     def get_employees_by_role(self, role: str):
-        from django.contrib.auth.models import User
+        from apps.authentication.models import UserProfile
+
         return list(
-            User.objects.filter(memberships__company=self, memberships__role=role)
+            UserProfile.objects.filter(memberships__company=self, memberships__role=role)
         )
 
     def assign_user(self, user_profile, role: str = "EMPLOYEE"):
