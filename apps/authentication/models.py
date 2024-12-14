@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from pgvector.django import VectorField
 
+from apps.buildings.models import Company
 
-# Create your models here.
 
 class UserProfile(models.Model):
     first_name = models.CharField(max_length=150)
@@ -18,6 +18,17 @@ class UserProfile(models.Model):
         on_delete=models.CASCADE,
         related_name='profile'
     )
+    companies = models.ManyToManyField(
+        Company,
+        through='Membership',
+        related_name='users'
+    )
+
+    def get_all_companies(self):
+        return list(self.companies.all())
+
+    def get_all_companies_by_role(self, role: str):
+        return list(self.companies.filter(memberships__role=role))
 
 
 class UserImage(models.Model):
@@ -34,3 +45,30 @@ class UserImage(models.Model):
 
     class Meta:
         unique_together = ('user', 'image_type', 'file_path')
+
+
+class Membership(models.Model):
+    ROLE_CHOICES = [
+        ('EMPLOYEE', 'Employee'),
+        ('ADMIN', 'Admin'),
+        ('MANAGEMENT', 'Management'),
+    ]
+
+    user_profile = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name='memberships'
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.CASCADE,
+        related_name='memberships'
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user_profile', 'company')  # Zapobiega duplikatom
+
+    def __str__(self):
+        return f"{self.user_profile.user.username} in {self.company.name} as {self.role}"

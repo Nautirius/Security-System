@@ -1,8 +1,12 @@
+from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Company, Building, Zone
 from django.conf import settings
 from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
+from django.contrib import messages
+
+from ..authentication.models import Membership
 
 
 def home(request):
@@ -26,6 +30,51 @@ def company_create(request: HttpRequest) -> HttpResponse:
     else:
         return render(request, 'buildings/company/company_create.html')
 
+
+def assign_user_to_company(request: HttpRequest) -> HttpResponse:
+
+    if request.method == 'POST':
+        try:
+            user_id = request.POST['user_id']
+            company_id = request.POST['company_id']
+            role = request.POST['role']
+
+            if user_id and company_id:
+                user = get_object_or_404(User, id=user_id)
+                company = get_object_or_404(Company, id=company_id)
+
+                user_profile = user.profile
+
+                membership_exists = Membership.objects.filter(
+                    user_profile=user_profile,
+                    company=company
+                ).exists()
+
+                if membership_exists:
+                    messages.error(request, f"Użytkownik {user.username} jest już przypisany do firmy {company.name}.")
+                else:
+                    Membership.objects.create(
+                        user_profile=user_profile,
+                        company=company,
+                        role=role
+                    )
+                    messages.success(request, f"Użytkownik {user.username} został przypisany do firmy {company.name} jako {role}.")
+            else:
+                messages.error(request, "Musisz wybrać użytkownika i firmę.")
+
+            return redirect('assign_user_to_company')
+
+        except Exception as e:
+            return redirect('assign_user_to_company')
+
+    users = User.objects.all()
+    companies = Company.objects.all()
+
+    return render(
+        request,
+        'buildings/company/assign_user_to_company.html',
+        { "users": users, "companies": companies }
+    )
 
 def company_update(request: HttpRequest, pk) -> HttpResponse:
     company = get_object_or_404(Company, pk=pk)
