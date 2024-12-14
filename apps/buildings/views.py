@@ -1,3 +1,4 @@
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Company, Building, Zone
 from django.conf import settings
@@ -7,13 +8,15 @@ from django.contrib.auth.decorators import login_required  # TODO: login require
 def home(request):
     return render(request, 'buildings/home.html')
 
+def company_home(request: HttpRequest) -> HttpResponse:
+    return render(request, 'buildings/company/home.html')
 
 def company_list(request):
     companies = Company.objects.all()
     return render(request, 'buildings/company/company_list.html', {'companies': companies})
 
 
-def company_create(request):
+def company_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         name = request.POST['name']
         if name:
@@ -24,7 +27,7 @@ def company_create(request):
         return render(request, 'buildings/company/company_create.html')
 
 
-def company_update(request, pk):
+def company_update(request: HttpRequest, pk) -> HttpResponse:
     company = get_object_or_404(Company, pk=pk)
     if request.method == 'POST':
         name = request.POST['name']
@@ -36,19 +39,23 @@ def company_update(request, pk):
         return render(request, 'buildings/company/company_update.html', {'company_id': pk, 'old_company': company})
 
 
-def company_delete(request, pk):
+def company_delete(request: HttpRequest, pk: int) -> HttpResponse:
     company = get_object_or_404(Company, pk=pk)
     if company:
         company.delete()
     return redirect('company_list')
 
 
-def building_list(request):
+def buildings_home(request: HttpRequest) -> HttpResponse:
+    return render(request, 'buildings/building/home.html')
+
+
+def building_list(request: HttpRequest) -> HttpResponse:
     buildings = Building.objects.all()
     return render(request, 'buildings/building/building_list.html', {'buildings': buildings})
 
 
-def building_create(request):
+def building_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         label = request.POST['label']
         company_id = request.POST['company_id']
@@ -62,7 +69,7 @@ def building_create(request):
         return render(request, 'buildings/building/building_create.html', {'companies': companies})
 
 
-def building_update(request, pk):
+def building_update(request: HttpRequest, pk: int) -> HttpResponse:
     building = get_object_or_404(Building, pk=pk)
     if request.method == 'POST':
         label = request.POST['label']
@@ -79,19 +86,22 @@ def building_update(request, pk):
                                                                            'companies': companies})
 
 
-def building_delete(request, pk):
+def building_delete(request: HttpRequest, pk: int) -> HttpResponse:
     building = get_object_or_404(Building, pk=pk)
     if building:
         building.delete()
     return redirect('building_list')
 
 
-def zone_list(request):
+def zone_home(request: HttpRequest) -> HttpResponse:
+    return render(request, 'buildings/zone/home.html')
+
+def zone_list(request: HttpRequest) -> HttpResponse:
     zones = Zone.objects.all()
     return render(request, 'buildings/zone/zone_list.html', {'zones': zones})
 
 
-def zone_create(request):
+def zone_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         label = request.POST['label']
         building_id = request.POST['building_id']
@@ -105,7 +115,7 @@ def zone_create(request):
         return render(request, 'buildings/zone/zone_create.html', {'buildings': buildings})
 
 
-def zone_update(request, pk):
+def zone_update(request: HttpRequest, pk: int) -> HttpResponse:
     zone = get_object_or_404(Zone, pk=pk)
     if request.method == 'POST':
         label = request.POST['label']
@@ -122,7 +132,7 @@ def zone_update(request, pk):
                                                                    'buildings': buildings})
 
 
-def zone_delete(request, pk):
+def zone_delete(request: HttpRequest, pk: int) -> HttpResponse:
     zone = get_object_or_404(Zone, pk=pk)
     if zone:
         zone.delete()
