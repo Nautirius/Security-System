@@ -47,9 +47,11 @@ else:
 SECRET_KEY = "django-insecure-$711n+_+laqy*pbdcj#-n0o2+=ox=c*=$7_x)%92d_oq%9i=$3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
 
 # Application definition
@@ -76,6 +78,7 @@ INSTALLED_APPS = [
     'apps.recognition',
     'apps.companies',
     'apps.permissions',
+    'apps.user_management',
 ]
 
 MIDDLEWARE = [
@@ -185,8 +188,8 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/dashboard"
+LOGOUT_REDIRECT_URL = "/auth/accounts/login"
 ACCOUNT_SIGNUP_REDIRECT_URL = "/auth/accounts/login"
 
 ACCOUNT_FORMS = {

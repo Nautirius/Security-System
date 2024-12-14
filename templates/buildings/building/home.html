@@ -1,0 +1,21 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} Buildings Management {% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="Buildings Management" subtitle="Welcome to your workspace" %}
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full">
+            <h2> Actions Panel </h2>
+        </header>
+
+        {% with url='/buildings/buildings/' text='List Of all Buildings' description='List all Buildings' %}
+            {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+        {% endwith %}
+
+        {% with url='/buildings/buildings/create/' text='Create Building' description='Create new building' %}
+            {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+        {% endwith %}
+    </section>
+{%  endblock  %}

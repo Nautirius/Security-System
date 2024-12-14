@@ -1,11 +1,16 @@
-{% extends 'base.html' %}
+{% extends 'layouts/dashboard_layout.html' %}
 
 {% block title %}Create Company{% endblock %}
 
-{% block content %}
+{% block dashboard_content %}
     {% load socialaccount %}
 
-    <section class="min-h-screen flex justify-center items-center bg-gray-100" id="form-section">
+    <section class="min-h-screen pt-8 flex flex-col items-center bg-gray-100" id="form-section">
+        <a class="text-sm/6 w-full bg-slate-600 max-w-md mb-5 text-center text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+           href="{% url 'company_list' %}"
+        >
+            <- Go back
+        </a>
         <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
             <h2 class="text-2xl font-bold mb-6 text-center">Create a New Company</h2>
             <form method="POST" action="/buildings/companies/create/" class="space-y-4">

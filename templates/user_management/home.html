@@ -1,0 +1,21 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} User Management {% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="User Management" subtitle="Welcome to your workspace" %}
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full">
+            <h2> Actions Panel </h2>
+        </header>
+
+        {% with url='/user_management/all' text='List Of all Users' description='Here you can upload face and silhouette images' %}
+            {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+        {% endwith %}
+
+        {% with url='/user_management/create_user/' text='Create User' description='Here you can upload face and silhouette images' %}
+            {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+        {% endwith %}
+    </section>
+{%  endblock  %}
