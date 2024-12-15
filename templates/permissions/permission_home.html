@@ -1,0 +1,25 @@
+{% extends 'layouts/dashboard_layout.html' %}
+{% load socialaccount %}
+
+{% block title %}Permissions{% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="Permissions Management"%}
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full">
+            <h2> Actions Panel </h2>
+        </header>
+    {% with url_name='list_permissions' text='List all Permissions' description='List all Permissions'%}
+        {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+    {% endwith %}
+    {% with url_name='create_permission' text='Create new Permission' description='Create new Permission'%}
+        {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+    {% endwith %}
+    {% with url_name='list_users_permissions' text='Manage User Permissions' description='Choose user and manage their permissions'%}
+        {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+    {% endwith %}
+    {% with url_name='list_zones_permissions' text='Manage Zone Permissions' description='Choose zone and manage its permissions'%}
+        {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+    {% endwith %}
+    </section>
+{% endblock %}

@@ -44,6 +44,7 @@ urlpatterns = [
 
     path("user_management/", include("apps.user_management.urls")),
     path("buildings/", include("apps.buildings.urls")),
+    path("permissions/", include("apps.permissions.urls")),
 
     path("cameras/", include("apps.cameras.urls")),
 
