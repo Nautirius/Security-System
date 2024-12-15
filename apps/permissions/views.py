@@ -5,9 +5,7 @@ from apps.buildings.models import Zone
 from .forms import PermissionForm, UserPermissionForm, ZonePermissionForm
 
 def permission_home(request):
-    context = {}
-    return render(request,  "permissions/permission_home.html",
-                  context)
+    return render(request,  "permissions/permission_home.html")
 
 def permission_list(request):
     permissions = Permission.objects.all()
