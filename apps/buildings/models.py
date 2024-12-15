@@ -49,4 +49,4 @@ class Zone(models.Model):
     building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name="zones")
 
     def __str__(self):
-        return f"{self.zone_id} ({self.building.label})"
+        return f"{self.label} ({self.building.label})"

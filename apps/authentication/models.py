@@ -30,6 +30,9 @@ class UserProfile(models.Model):
     def get_all_companies_by_role(self, role: str):
         return list(self.companies.filter(memberships__role=role))
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.email})"
+
 
 class UserImage(models.Model):
     IMAGE_TYPE_CHOICES = [
