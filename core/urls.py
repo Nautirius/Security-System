@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path, include, re_path
+from django.http import HttpRequest, HttpResponse
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -35,10 +36,15 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-def dashboard_view(request):
+def dashboard_view(request: HttpRequest) -> HttpResponse:
     return render(request, "dashboard.html", {})
 
+def index_view(request: HttpRequest) -> HttpResponse:
+    return render(request, "index.html", {})
+
 urlpatterns = [
+
+    path("", index_view, name="index"),
     path("admin/", admin.site.urls),
     path("auth/", include("apps.authentication.urls")),
 
