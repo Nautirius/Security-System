@@ -3,6 +3,11 @@ from .models import Camera
 from ..buildings.models import Zone
 from django.conf import settings
 from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
+from django.http import HttpRequest, HttpResponse
+
+
+def camera_home(request: HttpRequest) -> HttpResponse:
+    return render(request, 'cameras/home.html')
 
 
 def camera_list(request):
