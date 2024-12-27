@@ -20,6 +20,9 @@ import logging.config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Logs directory and log file path
 LOGS_DIR = os.path.join(BASE_DIR, 'logs')
 LOG_FILE = os.path.join(LOGS_DIR, 'django.log')
@@ -47,7 +50,7 @@ else:
 SECRET_KEY = "django-insecure-$711n+_+laqy*pbdcj#-n0o2+=ox=c*=$7_x)%92d_oq%9i=$3"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '*'
@@ -173,6 +176,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STORAGE_PATH = BASE_DIR / "storage"
 
 # Default primary key field type

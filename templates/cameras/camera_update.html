@@ -30,9 +30,9 @@
                     <label for="zone_id" class="block text-sm font-medium text-gray-700">Zone</label>
                     <select name="zone_id" id="zone_id" form="update-form" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
                         {% for zone in zones %}
-                                <option value={{ zone.id }} {% if zone.id == old_camera.zone.id %} selected {% endif %}>
-                                    {{ zone.id }} - {{ zone.label }} (building {{ zone.building.label }})
-                                </option>
+                            <option value={{ zone.id }} {% if zone.id == old_camera.zone.id %} selected {% endif %}>
+                                {{ zone.label }} ({{ zone.building.company.name }} - {{ zone.building.label }})
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
