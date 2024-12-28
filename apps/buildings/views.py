@@ -5,9 +5,10 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Company, Building, Zone
 from django.conf import settings
-from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from ..authentication.guards.user_membership_role import user_membership_role
 from ..authentication.models import Membership, UserProfile
 
 
@@ -35,6 +36,7 @@ def company_by_id(request: HttpRequest, pk: int) -> HttpResponse:
         )
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         name = request.POST['name']
@@ -46,6 +48,7 @@ def company_create(request: HttpRequest) -> HttpResponse:
         return render(request, 'buildings/company/company_create.html')
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def assign_user_to_company(request: HttpRequest) -> HttpResponse:
 
     if request.method == 'POST':
@@ -92,6 +95,7 @@ def assign_user_to_company(request: HttpRequest) -> HttpResponse:
     )
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_update(request: HttpRequest, pk) -> HttpResponse:
     company = get_object_or_404(Company, pk=pk)
     if request.method == 'POST':
@@ -104,6 +108,7 @@ def company_update(request: HttpRequest, pk) -> HttpResponse:
         return render(request, 'buildings/company/company_update.html', {'company_id': pk, 'old_company': company})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_delete(request: HttpRequest, pk: int) -> HttpResponse:
     company = get_object_or_404(Company, pk=pk)
     if company:
@@ -111,6 +116,7 @@ def company_delete(request: HttpRequest, pk: int) -> HttpResponse:
     return redirect('company_list')
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_fire_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
     company = get_object_or_404(Company, pk=company_id)
     user = get_object_or_404(User, id=user_id)
@@ -123,6 +129,7 @@ def company_fire_user(request: HttpRequest, company_id: int, user_id: int) -> Ht
     return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_promote_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
     company = get_object_or_404(Company, pk=company_id)
     user = get_object_or_404(User, id=user_id)
@@ -135,6 +142,7 @@ def company_promote_user(request: HttpRequest, company_id: int, user_id: int) ->
     return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_degrade_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
     company = get_object_or_404(Company, pk=company_id)
     user = get_object_or_404(User, id=user_id)
@@ -156,6 +164,7 @@ def building_list(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/building/building_list.html', {'buildings': buildings})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def building_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         label = request.POST['label']
@@ -170,6 +179,7 @@ def building_create(request: HttpRequest) -> HttpResponse:
         return render(request, 'buildings/building/building_create.html', {'companies': companies})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def building_update(request: HttpRequest, pk: int) -> HttpResponse:
     building = get_object_or_404(Building, pk=pk)
     if request.method == 'POST':
@@ -187,6 +197,7 @@ def building_update(request: HttpRequest, pk: int) -> HttpResponse:
                                                                            'companies': companies})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def building_delete(request: HttpRequest, pk: int) -> HttpResponse:
     building = get_object_or_404(Building, pk=pk)
     if building:
@@ -203,6 +214,7 @@ def zone_list(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/zone/zone_list.html', {'zones': zones})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def zone_create(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         label = request.POST['label']
@@ -217,6 +229,7 @@ def zone_create(request: HttpRequest) -> HttpResponse:
         return render(request, 'buildings/zone/zone_create.html', {'buildings': buildings})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def zone_update(request: HttpRequest, pk: int) -> HttpResponse:
     zone = get_object_or_404(Zone, pk=pk)
     if request.method == 'POST':
@@ -234,6 +247,7 @@ def zone_update(request: HttpRequest, pk: int) -> HttpResponse:
                                                                    'buildings': buildings})
 
 @login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def zone_delete(request: HttpRequest, pk: int) -> HttpResponse:
     zone = get_object_or_404(Zone, pk=pk)
     if zone:
