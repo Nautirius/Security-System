@@ -10,11 +10,11 @@
             <h2> Actions Panel </h2>
         </header>
 
-        {% with url='/buildings/zones/' text='List of all zones' description='List all companies' %}
+        {% with url='/buildings/zones/' text='List of all zones' description='List all zones' %}
             {% include 'partials/clickable_card.html' with url=url text=text description=description %}
         {% endwith %}
 
-        {% with url='/buildings/zones/create/' text='Create zone' description='Create new company' %}
+        {% with url='/buildings/zones/create/' text='Create zone' description='Create new zone' %}
             {% include 'partials/clickable_card.html' with url=url text=text description=description %}
         {% endwith %}
     </section>
