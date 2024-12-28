@@ -15,6 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import path, include, re_path
 from django.http import HttpRequest, HttpResponse
@@ -36,6 +37,7 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+@login_required
 def dashboard_view(request: HttpRequest) -> HttpResponse:
     return render(request, "dashboard.html", {})
 
