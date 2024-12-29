@@ -29,9 +29,9 @@
                     <label for="building_id" class="block text-sm font-medium text-gray-700">Building</label>
                     <select name="building_id" id="building_id" form="update-form" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
                         {% for building in buildings %}
-                                <option value={{ building.id }} {% if building.id == old_zone.building.id %} selected {% endif %}>
-                                    {{ building.id }} - {{ building.label }}
-                                </option>
+                            <option value={{ building.id }} {% if building.id == old_zone.building.id %} selected {% endif %}>
+                                {{ building.label }} ({{ building.company.name }})
+                            </option>
                         {% endfor %}
                     </select>
                 </div>

@@ -31,7 +31,7 @@
                     <select name="company_id" id="company_id" form="update-form" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
                         {% for company in companies %}
                                 <option value={{ company.id }} {% if company.id == old_building.company.id %} selected {% endif %}>
-                                    {{ company.id }} - {{ company.name }}
+                                    {{ company.name }}
                                 </option>
                         {% endfor %}
                     </select>

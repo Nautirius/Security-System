@@ -7,13 +7,13 @@
 
     <section class="min-h-screen pt-8 flex flex-col items-center bg-gray-100">
         <a class="text-sm/6 w-full bg-slate-600 max-w-md mb-5 text-center text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
-           href="{% url 'dashboard' %}"
+           href="{% url 'camera_home' %}"
         >
             <- Go back
         </a>
-        <h2 class="text-2xl font-bold mb-6 text-center">
-            <a href="{% url 'camera_create' %}">Add a New Camera</a>
-        </h2>
+{#        <h2 class="text-2xl font-bold mb-6 text-center">#}
+{#            <a href="{% url 'camera_create' %}">Add a New Camera</a>#}
+{#        </h2>#}
         <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
             <ul role="list" class="divide-y divide-gray-100">
                 {% for camera in cameras %}
@@ -40,5 +40,7 @@
                 {% endfor %}
             </ul>
         </div>
+        <a class="mt-6 text-sm bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+           href="{% url 'camera_create' %}">Add a New Camera</a>
     </section>
 {% endblock %}
