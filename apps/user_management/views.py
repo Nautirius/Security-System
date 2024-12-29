@@ -1,6 +1,7 @@
 import logging
 
 from allauth.core.internal.httpkit import redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
@@ -12,6 +13,7 @@ from apps.user_management.forms import CreateUserManagementForm, UpdateUserManag
 def home(request: HttpRequest) -> HttpResponse:
     return render(request, 'user_management/home.html')
 
+@login_required
 def list_users(request: HttpRequest) -> HttpResponse:
     users = User.objects.all()
     return render(
@@ -20,6 +22,7 @@ def list_users(request: HttpRequest) -> HttpResponse:
         {'users': users}
     )
 
+@login_required
 def create_user(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         form = CreateUserManagementForm(request.POST)
@@ -39,6 +42,7 @@ def create_user(request: HttpRequest) -> HttpResponse:
     else:
         return render(request, 'user_management/create_user.html')
 
+@login_required
 def edit_user(request: HttpRequest, pk: int) -> HttpResponse:
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -56,14 +60,14 @@ def edit_user(request: HttpRequest, pk: int) -> HttpResponse:
         form = UpdateUserManagementForm(user=user)
         return render(request, 'user_management/update_user.html', {'form': form, 'user_id': pk})
 
-
+@login_required
 def delete_user(request: HttpRequest, pk: int) -> HttpResponse:
     user = get_object_or_404(User, pk=pk)
     if user:
         user.delete()
     return redirect('list_users')
 
-
+@login_required
 def user_by_id(request: HttpRequest, pk: int) -> HttpResponse:
     user = get_object_or_404(User, pk=pk)
     if user:
