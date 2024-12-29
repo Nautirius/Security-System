@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Camera, CameraFeed
-from ..buildings.models import Zone
+from ..buildings.models import Company, Building, Zone
 from django.conf import settings
 from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
 from django.http import HttpRequest, HttpResponse
@@ -61,8 +61,32 @@ def camera_delete(request, pk):
 
 
 def camera_feed_grid(request):
-    cameras = Camera.objects.prefetch_related('feeds').all()
-    return render(request, 'cameras/camera_feed_grid.html', {'cameras': cameras})
+    companies = Company.objects.all()
+    buildings = Building.objects.all()
+    zones = Zone.objects.all()
+
+    selected_company_id = request.GET.get('company')
+    selected_building_id = request.GET.get('building')
+    selected_zone_id = request.GET.get('zone')
+
+    cameras = Camera.objects.prefetch_related('feeds')
+    if selected_company_id:
+        cameras = cameras.filter(zone__building__company_id=selected_company_id)
+    if selected_building_id:
+        cameras = cameras.filter(zone__building_id=selected_building_id)
+    if selected_zone_id:
+        cameras = cameras.filter(zone_id=selected_zone_id)
+
+    context = {
+        'cameras': cameras,
+        'companies': companies,
+        'buildings': buildings,
+        'zones': zones,
+        'selected_company_id': selected_company_id,
+        'selected_building_id': selected_building_id,
+        'selected_zone_id': selected_zone_id,
+    }
+    return render(request, 'cameras/camera_feed_grid.html', context)
 
 
 def camera_feed_upload(request):
@@ -71,17 +95,15 @@ def camera_feed_upload(request):
         image_path = request.FILES['image_path']
         camera = get_object_or_404(Camera, pk=camera_id)
 
-        # Check if a feed already exists for the camera
         feed, created = CameraFeed.objects.get_or_create(camera=camera)
 
-        # Save the uploaded image for both face and silhouette
         if feed.image_path_face:
             feed.image_path_face.delete(save=False)
         if feed.image_path_silhouette:
             feed.image_path_silhouette.delete(save=False)
 
         feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
-        image_path.seek(0)  # Reset stream to save again
+        image_path.seek(0)
         feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
         feed.save()
 

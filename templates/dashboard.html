@@ -21,23 +21,27 @@
                     {% include 'partials/clickable_card.html' with url=url text=text description=description %}
                 {% endwith %}
 
-                {% with url='/user_management/' text='User Management' description='This is a description for card 1.' %}
+                {% with url='/user_management/' text='User Management' description='Here you can manage Users' %}
                     {% include 'partials/clickable_card.html' with url=url text=text description=description %}
-                {% endwith %}
-
-                {% with url_name='building_list' text='Building Management' description='This is a description for card 1.' %}
-                    {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
                 {% endwith %}
 
                 {% with url_name='home_permission' text='Permissions Management' description='Here you can manage Permissions' %}
                     {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
                 {% endwith %}
 
-                {% with url_name='camera_list' text='Camera Management' description='This is a description for card 1.' %}
+                {% with url_name='company_home' text='Company Management' description='Here you can manage Companies' %}
                     {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
                 {% endwith %}
 
-                {% with url_name='company_list' text='Company Management' description='This is a description for card 1.' %}
+                {% with url_name='building_home' text='Building Management' description='Here you can manage Buildings' %}
+                    {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+                {% endwith %}
+
+                {% with url_name='zone_home' text='Zone Management' description='Here you can manage Zones' %}
+                    {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+                {% endwith %}
+
+                {% with url_name='camera_home' text='Camera Management' description='Here you can manage Cameras' %}
                     {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
                 {% endwith %}
             </section>
