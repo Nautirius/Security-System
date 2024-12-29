@@ -28,8 +28,8 @@
                     <label for="company_id" class="block text-sm font-medium text-gray-700">Company</label>
                     <select name="company_id" id="company_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
                         {% for company in companies %}
-                                <option value={{ company.id }}>{
-                                    { company.name }}
+                                <option value={{ company.id }}>
+                                    {{ company.name }}
                                 </option>
                         {% endfor %}
                     </select>
