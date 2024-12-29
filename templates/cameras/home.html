@@ -1,0 +1,25 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} Cameras Management {% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="Cameras Management" subtitle="Welcome to your workspace" %}
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full">
+            <h2> Actions Panel </h2>
+        </header>
+
+        {% with url_name='camera_list' text='List of all cameras' description='List all cameras' %}
+            {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+        {% endwith %}
+
+        {% with url_name='camera_create' text='Create camera' description='Create new camera' %}
+            {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+        {% endwith %}
+
+        {% with url_name='camera_feed_grid' text='Camera feed grid' description='Display camera feed' %}
+            {% include 'partials/clickable_card_2.html' with url_name=url_name text=text description=description %}
+        {% endwith %}
+    </section>
+{%  endblock  %}

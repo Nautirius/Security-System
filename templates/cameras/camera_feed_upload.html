@@ -1,0 +1,31 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %}Upload Camera Feed{% endblock %}
+
+{% block dashboard_content %}
+<section class="min-h-screen pt-8 flex flex-col items-center bg-gray-100">
+    <a class="text-sm w-full bg-slate-600 max-w-md mb-5 text-center text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+       href="{% url 'camera_feed_grid' %}">
+        <- Back to Camera Feed Grid
+    </a>
+    <h2 class="text-2xl font-bold mb-6">Upload Camera Feed</h2>
+    <form method="post" enctype="multipart/form-data" class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="camera" class="block text-sm font-medium text-gray-700">Camera</label>
+            <select id="camera" name="camera" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                {% for camera in cameras %}
+                <option value="{{ camera.id }}">
+                    {{ camera.label }} ({{ camera.zone.building.company.name }} - {{ camera.zone.building.label }} - {{ camera.zone.label }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-4">
+            <label for="image_path" class="block text-sm font-medium text-gray-700">Image File</label>
+            <input type="file" id="image_path" name="image_path" accept="image/*" class="mt-1 block w-full text-gray-900 border-gray-300 rounded-md shadow-sm">
+        </div>
+        <button type="submit" class="py-2 px-4 p-2 bg-slate-600 text-white border rounded-md hover:bg-slate-700">Upload</button>
+    </form>
+</section>
+{% endblock %}

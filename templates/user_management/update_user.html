@@ -1,0 +1,218 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} User Management {% endblock %}
+
+{% block dashboard_content %}
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full flex flex-row justify-between px-8">
+            <h2> Update User </h2>
+            <div class="whitespace-nowrap px-4 py-2 text-gray-700 border rounded-lg">
+                <a href="/user_management/all">
+                    <button> Go Back </button>
+                </a>
+            </div>
+        </header>
+
+        {% load socialaccount %}
+
+        <section class="col-span-full min-h-screen flex justify-center items-center bg-gray-100 rounded-lg" id="form-section">
+            <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+                <form method="POST" action="/user_management/edit/{{ user_id }}/" class="space-y-4 w-full">
+                    {% csrf_token %}
+
+                    <!-- First Name -->
+                    <div>
+                        <label for="firstname" class="block text-sm font-medium text-gray-700">Firstname</label>
+                        <input
+                                type="text"
+                                name="firstname"
+                                id="firstname"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter First Name"
+                                value="{{ form.firstname.value|default:'' }}"
+                        />
+                        {% if form.firstname.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.firstname.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Last Name -->
+                    <div>
+                        <label for="lastname" class="block text-sm font-medium text-gray-700">Lastname</label>
+                        <input
+                                type="text"
+                                name="lastname"
+                                id="lastname"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter Last Name"
+                                value="{{ form.lastname.value|default:'' }}"
+                        />
+                        {% if form.lastname.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.lastname.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter email"
+                                value="{{ form.email.value|default:'' }}"
+                        />
+                        {% if form.email.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.email.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="id_password1" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                type="password"
+                                name="password1"
+                                placeholder="Default Password"
+                                autocomplete="new-password"
+                                required="" id="id_password1"
+                        />
+                        {% if form.password.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.password.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Phone No. -->
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input
+                                type="text"
+                                name="phone"
+                                id="phone"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter phone number"
+                                value="{{ form.phone.value|default:'' }}"
+                        />
+                        {% if form.phone.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.phone.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Street -->
+                    <div>
+                        <label for="street" class="block text-sm font-medium text-gray-700">Street</label>
+                        <input
+                                type="text"
+                                name="street"
+                                id="street"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter street"
+                                value="{{ form.street.value|default:'' }}"
+                        />
+                        {% if form.street.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.street.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- City -->
+                    <div>
+                        <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                        <input
+                                type="text"
+                                name="city"
+                                id="city"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter street"
+                                value="{{ form.city.value|default:'' }}"
+                        />
+                        {% if form.city.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.city.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- ZIP Code -->
+                    <div>
+                        <label for="zip_code" class="block text-sm font-medium text-gray-700">ZIP Code</label>
+                        <input
+                                type="text"
+                                name="zip_code"
+                                id="zip_code"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter zip code"
+                                value="{{ form.zip_code.value|default:'' }}"
+                        />
+                        {% if form.zip_code.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.zip_code.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="company" class="block text-sm font-medium text-gray-700">Company</label>
+                        <input
+                                type="text"
+                                name="company"
+                                id="company"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm"
+                                placeholder="Enter company name"
+                                value="{{ form.company.value|default:'' }}"
+                        />
+                        {% if form.zip_code.errors %}
+                            <p class="mt-1 text-sm text-red-600">
+                                {% for error in form.company.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button
+                                type="submit"
+                                class="w-full bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                        >
+                            Update User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+{%  endblock  %}

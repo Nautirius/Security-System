@@ -1,0 +1,79 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %} Assign User to Company {% endblock %}
+
+{% block dashboard_content %}
+    <section class="col-span-full w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full flex flex-row justify-between px-8">
+            <h2> Assign User to Company </h2>
+            <div class="whitespace-nowrap px-4 py-2 text-gray-700 border rounded-lg">
+                <a href="/buildings/companies/home/">
+                    <button> Go Back </button>
+                </a>
+            </div>
+        </header>
+        {% load socialaccount %}
+
+        <div class="w-full col-span-full  bg-white rounded-lg shadow-md p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">Assign User to Company</h2>
+
+            <form class="space-y-4 w-full" method="POST" action="">
+                {% csrf_token %}
+                <label class="block text-sm font-medium text-gray-700" for="user_id">Użytkownik:</label>
+                <select name="user_id" id="user_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
+                    {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.profile.email }}</option>
+                    {% endfor %}
+                </select>
+
+                <label class="block text-sm font-medium text-gray-700" for="company_id">Firma:</label>
+                <select name="company_id" id="company_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
+                    {% for company in companies %}
+                        <option value="{{ company.id }}">{{ company.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label class="block text-sm font-medium text-gray-700" for="role">Rola:</label>
+                <select name="role" id="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
+                    <option value="EMPLOYEE">Employee</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="MANAGEMENT">Management</option>
+                </select>
+
+                <button
+                    class="w-full bg-slate-600 text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+                    type="submit"
+                >
+                    Przypisz
+                </button>
+            </form>
+        </div>
+
+        {% if messages %}
+            <ul class="w-full col-span-full px-8 py-4 mt-4 border border-gray-300 rounded-lg shadow-sm bg-white">
+                {% for message in messages %}
+                    <li class="flex items-center text-white text-sm font-medium p-3 mb-2 rounded-md 'bg-green-600'">
+                        {% if message.tags == 'success' %}
+                            <li class="flex items-center text-white text-sm font-medium p-3 mb-2 rounded-md bg-green-600">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                {{ message }}
+                            </li>
+                        {% else %}
+                            <li class="flex items-center text-white text-sm font-medium p-3 mb-2 rounded-md bg-rose-600">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                {{ message }}
+                            </li>
+
+                        {% endif %}
+
+
+
+                {% endfor %}
+            </ul>
+        {% endif %}
+      </section>
+{%  endblock  %}

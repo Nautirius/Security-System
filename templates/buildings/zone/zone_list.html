@@ -1,0 +1,45 @@
+{% extends 'layouts/dashboard_layout.html' %}
+
+{% block title %}Zone List{% endblock %}
+
+{% block dashboard_content %}
+    {% load socialaccount %}
+
+    <section class="min-h-screen pt-8 flex flex-col items-center bg-gray-100">
+        <a class="text-sm/6 w-full bg-slate-600 max-w-md mb-5 text-center text-white py-2 px-4 rounded-md hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500"
+           href="{% url 'zone_home' %}"
+        >
+            <- Go back
+        </a>
+
+        <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+            <ul role="list" class="divide-y divide-gray-100">
+                {% for zone in zones %}
+                  <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex min-w-0 gap-x-4">
+                      <div class="min-w-0 flex-auto">
+                        <p class="text-sm/6 font-semibold text-gray-900">{{ zone.label }} (building {{ zone.building.label }})</p>
+    {#                    <p class="mt-1 truncate text-xs/5 text-gray-500">leslie.alexander@example.com</p>#}
+                      </div>
+                    </div>
+                    <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                        <a class="text-sm/6 text-gray-900" href="{% url 'zone_update' zone.id %}">Edit</a>
+                        <a class="text-sm/6 text-gray-900" href="{% url 'zone_delete' zone.id %}">Delete</a>
+                    </div>
+                  </li>
+                {% empty %}
+                    <li class="flex justify-between gap-x-6 py-5">
+                    <div class="flex min-w-0 gap-x-4">
+                      <div class="min-w-0 flex-auto">
+                        <p class="text-sm/6 font-semibold text-gray-900">No Zones to display</p>
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <a class="mt-6 text-sm bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+           href="{% url 'zone_create' %}">Add a New Zone</a>
+    </section>
+{% endblock %}
+

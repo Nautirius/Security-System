@@ -1,0 +1,52 @@
+{% extends 'layouts/dashboard_layout.html' %}
+{% load socialaccount %}
+
+{% block title %}Permissions{% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="Permissions Management"%}
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        <header class="col-span-full flex flex-row justify-between px-8">
+            <h2> Users: </h2>
+            <div class="whitespace-nowrap px-4 py-2 text-gray-700 border rounded-lg">
+                <a href="{% url 'create_permission' %}">
+                    <button> Create new Permission </button>
+                </a>
+            </div>
+        </header>
+        <div class="rounded-lg border border-gray-200 col-span-full">
+            <div class="overflow-x-auto rounded-t-lg">
+                <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                    <thead class="text-left">
+                        <tr>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">User</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Permissions</th>
+                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+                    {% for user in users%}
+                        <tr>
+                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{ user }}</td>
+                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                <ul>
+                                    {% for permission in user.permission_set.all %}
+                                        <li>{{ permission }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                                <a class="px-4 py-2 border rounded-lg"
+                                   href="{% url 'update_user_permissions' user.id%}"> <button>
+                                    Edit Permissions </button>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
