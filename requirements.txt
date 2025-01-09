@@ -7,3 +7,4 @@ django-allauth
 django-allauth[socialaccount]
 drf_yasg
 pillow
+deepface
