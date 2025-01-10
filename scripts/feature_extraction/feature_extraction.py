@@ -57,3 +57,11 @@ class PoseFeatureExtractionModel:
         normalizing_distance = (feature_list[5] + feature_list[6]) / 2
         feature_list = [feature / normalizing_distance for feature in feature_list]
         return feature_list
+
+# usage example
+# if __name__ == "__main__":
+#     face_embeddings = extract_face_features('image1.jpg')
+#     model = PoseFeatureExtractionModel()
+#     pose_embeddings = model.extract_features('image4.jpg')
+#     print(face_embeddings)
+#     print(pose_embeddings)
