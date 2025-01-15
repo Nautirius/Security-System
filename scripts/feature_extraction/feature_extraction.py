@@ -2,6 +2,7 @@ from deepface import DeepFace
 from mmpose.apis import init_model, inference_topdown
 from crowdpose import dataset_info
 import math
+import os
 
 class IncorrectFaceAmountError(ValueError):
     pass
@@ -23,9 +24,20 @@ def extract_face_features(image_path):
         "should be 1")
     return embeddings[0]['embedding']
 
+def singleton(cls):
+    instances = {}
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return get_instance
+
+@singleton
 class PoseFeatureExtractionModel:
     def __init__(self):
-        model_config = 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py'
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        #model_config = 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py'
+        model_config = os.path.join(dir_path, 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py')
         model_checkpoint = 'https://download.openmmlab.com/mmpose/v1/projects/rtmo/rtmo-l_16xb16-700e_body7-crowdpose-640x640-5bafdc11_20231219.pth'
         device = 'cpu'
         self.model = init_model(model_config, model_checkpoint, device=device)
@@ -59,9 +71,9 @@ class PoseFeatureExtractionModel:
         return feature_list
 
 # usage example
-# if __name__ == "__main__":
-#     face_embeddings = extract_face_features('image1.jpg')
-#     model = PoseFeatureExtractionModel()
-#     pose_embeddings = model.extract_features('image4.jpg')
-#     print(face_embeddings)
-#     print(pose_embeddings)
+if __name__ == "__main__":
+    face_embeddings = extract_face_features('image1.jpg')
+    model = PoseFeatureExtractionModel()
+    pose_embeddings = model.extract_features('image4.jpg')
+    print(len(face_embeddings))
+    print(len(pose_embeddings))
