@@ -27,7 +27,23 @@ ___
 
 
 ### Starting app
-
+#### Feature extraction:
+Feature extraction tested only locally so far.
+Feature extraction tested using python 3.10.11 available at 
+https://www.python.org/downloads/release/python-31011/.
+Build python 3.10.11 after installing following libraries:
+```shell
+sudo apt-get install libbz2-dev
+sudo apt-get install lzma
+sudo apt-get install liblzma-dev
+```
+otherwise errors may occur.
+```shell
+python3.10 -m venv venv
+source venv/bin/activate
+pip3.10 install -r requirements_pytorch.txt
+pip3.10 install -r requirements.txt
+```
 #### Locally:
 ```shell
 python3 -m venv venv 
