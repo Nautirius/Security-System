@@ -29,7 +29,7 @@ ___
 ### Starting app
 #### Feature extraction:
 Feature extraction tested only locally so far.
-Feature extraction tested using python 3.10.11 available at 
+Feature extraction tested using python 3.10.11 available at
 https://www.python.org/downloads/release/python-31011/.
 Build python 3.10.11 after installing following libraries:
 ```shell
@@ -41,13 +41,14 @@ otherwise errors may occur.
 ```shell
 python3.10 -m venv venv
 source venv/bin/activate
-pip3.10 install -r requirements_pytorch.txt
+pip3.10 install -r requirements_pytorch_no_deps.txt --no-deps
+pip3.10 install -r requirements_no_deps.txt --no-deps
 pip3.10 install -r requirements.txt
 ```
 #### Locally:
 ```shell
-python3 -m venv venv 
-source venv/bin/activate 
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 python manage.py runserver
 ```
@@ -67,12 +68,12 @@ docker exec -it web python manage.py runserver 0.0.0.0:8000
 ```
 
 ### Creating new Migrations
-```shell 
+```shell
 python manage.py makemigrations [app_name] --name [migration_name] --empty
 ```
 Example:
 ```shell
-python manage.py makemigrations authentication --name add_pgvector --empty 
+python manage.py makemigrations authentication --name add_pgvector --empty
 ```
 
 ### Execute Migrations
@@ -98,7 +99,7 @@ class RecognitionConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "recognition"
 ```
-to 
+to
 ```python
 class RecognitionConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
