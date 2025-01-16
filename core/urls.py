@@ -27,6 +27,8 @@ from rest_framework import permissions
 from django.conf import settings
 from django.conf.urls.static import static
 
+from core.views import full_text_search_view
+
 schema_view = get_schema_view(
     openapi.Info(
         title="API Documentation",
@@ -47,6 +49,9 @@ def dashboard_view(request: HttpRequest) -> HttpResponse:
 def index_view(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html", {})
 
+
+
+
 urlpatterns = [
 
     path("", index_view, name="index"),
@@ -60,6 +65,8 @@ urlpatterns = [
     path("cameras/", include("apps.cameras.urls")),
 
     path("dashboard/", dashboard_view, name="dashboard"),
+
+    path("search/", full_text_search_view, name="search"),
 
     # SWAGGER DOCS
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

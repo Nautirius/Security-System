@@ -18,6 +18,10 @@ from django.conf import settings
 from .forms import CustomSignupForm
 from .models import UserImage
 from .storage import FileStorage
+from ..recognition.feature_extraction.face_feature_extarction_model import FaceFeatureExtractionModel
+from ..recognition.feature_extraction.feature_extraction_model import FeatureExtractionModel
+from ..recognition.feature_extraction.pose_feature_extraction_model import PoseFeatureExtractionModel
+
 
 @login_required
 def upload_images(request):
@@ -30,8 +34,20 @@ def upload_images(request):
             for file in images:
                 relative_path = f'user_{user.id}/{image_type}/{file.name}'
                 saved_path = storage.save_file(file, relative_path)
-
-                UserImage.objects.create(user=user, image_type=image_type, file_path=relative_path)
+                model: FeatureExtractionModel = None
+                if image_type == 'face':
+                    model = FaceFeatureExtractionModel()
+                else:
+                    model = PoseFeatureExtractionModel()
+                try:
+                    embeddings = model.extract_features(saved_path)
+                    UserImage.objects.create(user=user, image_type=image_type, file_path=relative_path, embedding=embeddings)
+                except Exception as e:
+                    return render(
+                        request,
+                        'user/upload_profile_photos_failure.html',
+                        {'message': 'Failed to upload Files!', 'reason': str(e)}
+                    )
 
         return redirect('/auth/upload/success')
 
