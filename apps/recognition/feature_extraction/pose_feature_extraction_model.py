@@ -1,13 +1,14 @@
 from deepface import DeepFace
 from mmpose.apis import init_model, inference_topdown
 
+from apps.recognition.feature_extraction.feature_extraction_model import FeatureExtractionModel
 from core.utils.singleton import singleton
-from crowdpose import dataset_info
+from .crowdpose import dataset_info
 import math
 import os
 
 @singleton
-class PoseFeatureExtractionModel:
+class PoseFeatureExtractionModel(FeatureExtractionModel):
     def __init__(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         #model_config = 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py'
