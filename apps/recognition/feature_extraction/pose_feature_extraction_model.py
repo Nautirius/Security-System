@@ -6,27 +6,6 @@ from crowdpose import dataset_info
 import math
 import os
 
-class IncorrectFaceAmountError(ValueError):
-    pass
-
-class IncorrectPeopleAmountError(ValueError):
-    pass
-
-# returns a 512 elements long list of face features extracted from image located
-# under passed path, raises error when 0 or more than 1 face are found in image
-def extract_face_features(image_path):
-    embeddings = DeepFace.represent(
-        img_path = image_path,
-        model_name = "GhostFaceNet",
-        detector_backend = 'mtcnn',
-        align = True,
-    )
-    if len(embeddings) != 1:
-        raise IncorrectFaceAmountError(f"Found {len(embeddings)} faces on image, "
-        "should be 1")
-    return embeddings[0]['embedding']
-
-
 @singleton
 class PoseFeatureExtractionModel:
     def __init__(self):
@@ -54,7 +33,7 @@ class PoseFeatureExtractionModel:
         prediction_instances = model_results[0].pred_instances
         if len(prediction_instances) != 1:
             raise IncorrectPeopleAmountError(f"Found {len(prediction_instances)} "
-            "people on image, should be 1")
+                                             "people on image, should be 1")
         keypoints_coordinates = prediction_instances.keypoints[0]
         feature_list = []
         for point1_id, point2_id in self.linked_keypoints_ids_list:
@@ -65,10 +44,6 @@ class PoseFeatureExtractionModel:
         feature_list = [feature / normalizing_distance for feature in feature_list]
         return feature_list
 
-# usage example
-if __name__ == "__main__":
-    face_embeddings = extract_face_features('image1.jpg')
-    model = PoseFeatureExtractionModel()
-    pose_embeddings = model.extract_features('image4.jpg')
-    print(len(face_embeddings))
-    print(len(pose_embeddings))
+
+class IncorrectPeopleAmountError(ValueError):
+    pass

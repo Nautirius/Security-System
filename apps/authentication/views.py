@@ -30,7 +30,7 @@ def upload_images(request):
             for file in images:
                 relative_path = f'user_{user.id}/{image_type}/{file.name}'
                 saved_path = storage.save_file(file, relative_path)
-
+                # model = PoseFeatureExtractionModel(path)
                 UserImage.objects.create(user=user, image_type=image_type, file_path=relative_path)
 
         return redirect('/auth/upload/success')
