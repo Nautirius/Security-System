@@ -1,6 +1,10 @@
+from typing import Optional, List
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import QuerySet, F
 from pgvector.django import VectorField
+from pgvector.django.functions import L2Distance
 
 from apps.buildings.models import Company
 
@@ -45,6 +49,96 @@ class UserImage(models.Model):
     file_path = models.TextField()
     embedding = VectorField(null=True, blank=True) # TODO : EMBEDDINGS ??
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    @classmethod
+    def filter_by_embedding(
+            cls,
+            embedding: list[float],
+            threshold: float,
+            image_type: Optional[str] = None,
+            user: Optional[User] = None
+    ) -> QuerySet:
+        """
+        Filtruje obrazy na podstawie odległości między embedingami.
+
+        :param embedding: Wektor cech do porównania
+        :param threshold: Maksymalna akceptowalna odległość (L2)
+        :param image_type: Opcjonalny filtr typu obrazu ('face' lub 'silhouette')
+        :param user: Opcjonalny filtr użytkownika
+        :return: QuerySet zawierający obrazy spełniające kryteria
+        """
+        queryset = cls.objects.all()
+
+        if image_type:
+            queryset = queryset.filter(image_type=image_type)
+
+        if user:
+            queryset = queryset.filter(user=user)
+
+        return (
+            queryset.annotate(distance=L2Distance(F('embedding'), embedding))
+            .filter(distance__lt=threshold)
+            .order_by('distance')
+        )
+
+    @classmethod
+    def get_k_closest(
+            cls,
+            embedding: List[float],
+            k: int,
+            image_type: Optional[str] = None,
+            user: Optional[User] = None
+    ) -> QuerySet:
+        """
+        Zwraca k najbliższych obrazów na podstawie odległości między embedingami.
+
+        :param embedding: Wektor cech do porównania
+        :param k: Liczba najbliższych obrazów do zwrócenia
+        :param image_type: Opcjonalny filtr typu obrazu ('face' lub 'silhouette')
+        :param user: Opcjonalny filtr użytkownika
+        :return: QuerySet zawierający k najbliższych obrazów
+        """
+        queryset = cls.objects.all()
+
+        if image_type:
+            queryset = queryset.filter(image_type=image_type)
+
+        if user:
+            queryset = queryset.filter(user=user)
+
+        return (
+            queryset.annotate(distance=L2Distance(F('embedding'), embedding))
+            .order_by('distance')[:k]
+        )
+
+    @classmethod
+    def get_closest(
+            cls,
+            embedding: List[float],
+            image_type: Optional[str] = None,
+            user: Optional[User] = None
+    ) -> Optional['UserImage']:
+        """
+        Zwraca najbliższy obraz na podstawie embeddingu.
+
+        :param embedding: Wektor cech do porównania
+        :param image_type: Opcjonalny filtr typu obrazu ('face' lub 'silhouette')
+        :param user: Opcjonalny filtr użytkownika
+        :return: Najbliższy obraz lub None, jeśli brak wyników
+        """
+        queryset = cls.objects.all()
+
+        if image_type:
+            queryset = queryset.filter(image_type=image_type)
+
+        if user:
+            queryset = queryset.filter(user=user)
+
+        return (
+            queryset.annotate(distance=L2Distance(F('embedding'), embedding))
+            .order_by('distance')
+            .first()
+        )
 
     class Meta:
         unique_together = ('user', 'image_type', 'file_path')
