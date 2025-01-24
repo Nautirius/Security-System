@@ -62,6 +62,8 @@ urlpatterns = [
     path("buildings/", include("apps.buildings.urls")),
     path("permissions/", include("apps.permissions.urls")),
 
+    path("recognition/", include("apps.recognition.urls")),
+
     path("cameras/", include("apps.cameras.urls")),
 
     path("dashboard/", dashboard_view, name="dashboard"),
