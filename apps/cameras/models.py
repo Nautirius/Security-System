@@ -23,6 +23,7 @@ class CameraFeed(models.Model):
     image_path_face = models.ImageField(upload_to="camera_feeds/face/")
     image_path_silhouette = models.ImageField(upload_to="camera_feeds/silhouette/")
     date_uploaded = models.DateTimeField(auto_now=True)
+    authorized = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
