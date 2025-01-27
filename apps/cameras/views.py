@@ -1,5 +1,8 @@
+import logging
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Camera, CameraFeed
+from ..authentication.models import UserImage
 from ..buildings.models import Company, Building, Zone
 from ..authentication.guards.user_membership_role import user_membership_role
 from django.conf import settings
@@ -122,7 +125,24 @@ def camera_feed_upload(request):
         face_embedding = model.extract_features(feed.image_path_face.path)
         silhouette_embedding = model.extract_features(feed.image_path_silhouette.path)
 
-        if compare_embeddings(face_embedding, silhouette_embedding, threshold=0.5):
+        THRESHOLD = 0.5
+
+        matching_face_images = UserImage.filter_by_embedding(
+            embedding=face_embedding,
+            threshold=THRESHOLD,
+            image_type='face'
+        )
+
+        matching_silhouette_images = UserImage.filter_by_embedding(
+            embedding=silhouette_embedding,
+            threshold=THRESHOLD,
+            image_type='silhouette'
+        )
+
+        logging.info(f"Mathing Faces {len(matching_face_images)}")
+        logging.info(f"Mathing silhouette {len(matching_silhouette_images)}")
+
+        if matching_face_images.exists() and matching_silhouette_images.exists():
             feed.authorized = True
         else:
             feed.authorized = False
@@ -135,8 +155,8 @@ def camera_feed_upload(request):
         return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
 
 
-def compare_embeddings(embedding1, embedding2, threshold=0.5):
-    if not embedding1 or not embedding2:
-        return False
-    distance = sum((e1 - e2) ** 2 for e1, e2 in zip(embedding1, embedding2)) ** 0.5
-    return distance < threshold
+# def compare_embeddings(embedding1, embedding2, threshold=0.5):
+#     if not embedding1 or not embedding2:
+#         return False
+#     distance = sum((e1 - e2) ** 2 for e1, e2 in zip(embedding1, embedding2)) ** 0.5
+#     return distance < threshold
