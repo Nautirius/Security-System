@@ -1,5 +1,8 @@
+import logging
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Camera, CameraFeed
+from ..authentication.models import UserImage
 from ..buildings.models import Company, Building, Zone
 from ..authentication.guards.user_membership_role import user_membership_role
 from django.conf import settings
@@ -7,6 +10,8 @@ from django.contrib.auth.decorators import login_required  # TODO: login require
 from django.http import HttpRequest, HttpResponse
 from django.core.files.base import ContentFile
 import os
+
+from ..recognition.feature_extraction.face_feature_extarction_model import FaceFeatureExtractionModel
 
 
 def camera_home(request: HttpRequest) -> HttpResponse:
@@ -115,6 +120,33 @@ def camera_feed_upload(request):
         feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
         image_path.seek(0)
         feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
+
+        model = FaceFeatureExtractionModel()
+        face_embedding = model.extract_features(feed.image_path_face.path)
+        silhouette_embedding = model.extract_features(feed.image_path_silhouette.path)
+
+        THRESHOLD = 0.5
+
+        matching_face_images = UserImage.filter_by_embedding(
+            embedding=face_embedding,
+            threshold=THRESHOLD,
+            image_type='face'
+        )
+
+        matching_silhouette_images = UserImage.filter_by_embedding(
+            embedding=silhouette_embedding,
+            threshold=THRESHOLD,
+            image_type='silhouette'
+        )
+
+        logging.info(f"Mathing Faces {len(matching_face_images)}")
+        logging.info(f"Mathing silhouette {len(matching_silhouette_images)}")
+
+        if matching_face_images.exists() and matching_silhouette_images.exists():
+            feed.authorized = True
+        else:
+            feed.authorized = False
+
         feed.save()
 
         return redirect('camera_feed_grid')
@@ -122,3 +154,9 @@ def camera_feed_upload(request):
         cameras = Camera.objects.all()
         return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
 
+
+# def compare_embeddings(embedding1, embedding2, threshold=0.5):
+#     if not embedding1 or not embedding2:
+#         return False
+#     distance = sum((e1 - e2) ** 2 for e1, e2 in zip(embedding1, embedding2)) ** 0.5
+#     return distance < threshold
