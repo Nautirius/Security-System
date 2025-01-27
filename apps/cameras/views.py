@@ -8,6 +8,8 @@ from django.http import HttpRequest, HttpResponse
 from django.core.files.base import ContentFile
 import os
 
+from ..recognition.feature_extraction.face_feature_extarction_model import FaceFeatureExtractionModel
+
 
 def camera_home(request: HttpRequest) -> HttpResponse:
     return render(request, 'cameras/home.html')
@@ -115,6 +117,16 @@ def camera_feed_upload(request):
         feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
         image_path.seek(0)
         feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
+
+        model = FaceFeatureExtractionModel()
+        face_embedding = model.extract_features(feed.image_path_face.path)
+        silhouette_embedding = model.extract_features(feed.image_path_silhouette.path)
+
+        if compare_embeddings(face_embedding, silhouette_embedding, threshold=0.5):
+            feed.authorized = True
+        else:
+            feed.authorized = False
+
         feed.save()
 
         return redirect('camera_feed_grid')
@@ -122,3 +134,9 @@ def camera_feed_upload(request):
         cameras = Camera.objects.all()
         return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
 
+
+def compare_embeddings(embedding1, embedding2, threshold=0.5):
+    if not embedding1 or not embedding2:
+        return False
+    distance = sum((e1 - e2) ** 2 for e1, e2 in zip(embedding1, embedding2)) ** 0.5
+    return distance < threshold
