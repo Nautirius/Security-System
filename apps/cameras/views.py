@@ -1,17 +1,22 @@
 import logging
+import time
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Camera, CameraFeed
+from .. import cameras
 from ..authentication.models import UserImage
 from ..buildings.models import Company, Building, Zone
 from ..authentication.guards.user_membership_role import user_membership_role
 from django.conf import settings
-from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.core.files.base import ContentFile
 import os
+import asyncio
+from asgiref.sync import async_to_sync, sync_to_async
 
 from ..recognition.feature_extraction.face_feature_extarction_model import FaceFeatureExtractionModel
+from ..recognition.feature_extraction.pose_feature_extraction_model import PoseFeatureExtractionModel
 
 
 def camera_home(request: HttpRequest) -> HttpResponse:
@@ -101,58 +106,80 @@ def camera_feed_grid(request):
     }
     return render(request, 'cameras/camera_feed_grid.html', context)
 
+# @sync_to_async
+def get_image_embeddings(model: FaceFeatureExtractionModel, feed_path):
+    return model.extract_features(feed_path)
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def camera_feed_upload(request):
-    if request.method == 'POST':
-        camera_id = request.POST['camera']
-        image_path = request.FILES['image_path']
-        camera = get_object_or_404(Camera, pk=camera_id)
+    try:
+        if request.method == 'POST':
+            camera_id = request.POST['camera']
+            image_path = request.FILES['image_path']
+            camera = get_object_or_404(Camera, pk=camera_id)
 
-        feed, created = CameraFeed.objects.get_or_create(camera=camera)
+            feed, created = CameraFeed.objects.get_or_create(camera=camera)
 
-        if feed.image_path_face:
-            feed.image_path_face.delete(save=False)
-        if feed.image_path_silhouette:
-            feed.image_path_silhouette.delete(save=False)
+            # Delete existing images if present
+            if feed.image_path_face:
+                feed.image_path_face.delete(save=False)
+            if feed.image_path_silhouette:
+                feed.image_path_silhouette.delete(save=False)
 
-        feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
-        image_path.seek(0)
-        feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
+            # Save the uploaded image files
+            feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
+            image_path.seek(0)
+            feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
 
-        model = FaceFeatureExtractionModel()
-        face_embedding = model.extract_features(feed.image_path_face.path)
-        silhouette_embedding = model.extract_features(feed.image_path_silhouette.path)
+            face_model = FaceFeatureExtractionModel()
+            silhouette_model = PoseFeatureExtractionModel()
 
-        THRESHOLD = 0.5
+            face_embedding = face_model.extract_features(feed.image_path_face.path)
+            silhouette_embedding = silhouette_model.extract_features(feed.image_path_silhouette.path)
 
-        matching_face_images = UserImage.filter_by_embedding(
-            embedding=face_embedding,
-            threshold=THRESHOLD,
-            image_type='face'
-        )
 
-        matching_silhouette_images = UserImage.filter_by_embedding(
-            embedding=silhouette_embedding,
-            threshold=THRESHOLD,
-            image_type='silhouette'
-        )
+            FACE_THRESHOLD = 0.75
+            SILHOUETTE_THRESHOLD = 0.04
 
-        logging.info(f"Mathing Faces {len(matching_face_images)}")
-        logging.info(f"Mathing silhouette {len(matching_silhouette_images)}")
+            # Perform matching based on embeddings
+            matching_face_images = UserImage.filter_by_embedding(
+                embedding=face_embedding,
+                threshold=FACE_THRESHOLD,
+                image_type='face'
+            )
 
-        if matching_face_images.exists() and matching_silhouette_images.exists():
-            feed.authorized = True
+            for image in matching_face_images:
+                logging.info(f"Image ID: {image.id}, Distance: {image.distance}")
+
+            matching_silhouette_images = UserImage.filter_by_embedding(
+                embedding=silhouette_embedding,
+                threshold=SILHOUETTE_THRESHOLD,
+                image_type='silhouette'
+            )
+
+            for image in matching_silhouette_images:
+                logging.info(f"Image ID: {image.id}, Distance: {image.distance}")
+
+            matched_faces = len(matching_face_images)
+            matched_silhouettes = len(matching_silhouette_images)
+            logging.info(f"Matching Faces: {matched_faces}")
+            logging.info(f"Matching Silhouettes: {matched_silhouettes}")
+
+            # Update the authorization status
+            feed.authorized = matched_faces + matched_silhouettes > 0
+            # await asyncio.to_thread(feed.save)  # Save in a non-blocking way
+
+            feed.save()
+
+            return redirect('camera_feed_grid')
         else:
-            feed.authorized = False
+            cameras = Camera.objects.all()
+            return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
+    except Exception as e:
+        logging.error(e)
+        return render(request, 'cameras/camera_feed_upload.html', {'errors': 'chuj'})
 
-        feed.save()
-
-        return redirect('camera_feed_grid')
-    else:
-        cameras = Camera.objects.all()
-        return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
 
 
 # def compare_embeddings(embedding1, embedding2, threshold=0.5):
