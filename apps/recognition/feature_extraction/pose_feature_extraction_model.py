@@ -32,9 +32,9 @@ class PoseFeatureExtractionModel(FeatureExtractionModel):
     def extract_features(self, img_path):
         model_results = inference_topdown(self.model, img_path)
         prediction_instances = model_results[0].pred_instances
-        if len(prediction_instances) != 1:
-            raise IncorrectPeopleAmountError(f"Found {len(prediction_instances)} "
-                                             "people on image, should be 1")
+        # if len(prediction_instances) != 1:
+        #     raise IncorrectPeopleAmountError(f"Found {len(prediction_instances)} "
+        #                                      "people on image, should be 1")
         keypoints_coordinates = prediction_instances.keypoints[0]
         feature_list = []
         for point1_id, point2_id in self.linked_keypoints_ids_list:

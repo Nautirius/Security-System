@@ -65,10 +65,10 @@
                     Authorized: {{ camera.feeds.authorized }}
                 </div>
             {% if camera.feeds %}
-                <p class="text-sm text-gray-500">Face Feed</p>
-                <img src="{{ camera.feeds.image_path_face.url }}" alt="Face Feed" class="rounded-md object-cover h-36 w-full mb-4">
-                <p class="text-sm text-gray-500">Silhouette Feed</p>
-                <img src="{{ camera.feeds.image_path_silhouette.url }}" alt="Silhouette Feed" class="rounded-md object-cover h-36 w-full">
+                <p class="text-sm text-gray-500">Feed</p>
+                <img src="{{ camera.feeds.image_path_face.url }}" alt="Face Feed" class="rounded-md object-cover h-72 w-full mb-4">
+{#                <p class="text-sm text-gray-500">Silhouette Feed</p>#}
+{#                <img src="{{ camera.feeds.image_path_silhouette.url }}" alt="Silhouette Feed" class="rounded-md object-cover h-36 w-full">#}
                 <p class="mt-2 text-sm text-gray-500">{{ camera.feeds.date_uploaded }}</p>
             {% else %}
             <div class="bg-gray-200 h-48 rounded-md flex items-center justify-center">

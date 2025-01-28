@@ -3,7 +3,7 @@ from typing import Optional, List
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import QuerySet, F
-from pgvector.django import VectorField
+from pgvector.django import VectorField, CosineDistance
 from pgvector.django.functions import L2Distance
 
 from apps.buildings.models import Company
@@ -47,7 +47,7 @@ class UserImage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images')
     image_type = models.CharField(max_length=10, choices=IMAGE_TYPE_CHOICES)
     file_path = models.TextField()
-    embedding = VectorField(null=True, blank=True) # TODO : EMBEDDINGS ??
+    embedding = VectorField(null=True, blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     @classmethod
@@ -76,7 +76,7 @@ class UserImage(models.Model):
             queryset = queryset.filter(user=user)
 
         return (
-            queryset.annotate(distance=L2Distance(F('embedding'), embedding))
+            queryset.annotate(distance=CosineDistance(F('embedding'), embedding))
             .filter(distance__lt=threshold)
             .order_by('distance')
         )
