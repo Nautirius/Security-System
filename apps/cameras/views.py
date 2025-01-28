@@ -15,6 +15,7 @@ import os
 import asyncio
 from asgiref.sync import async_to_sync, sync_to_async
 
+from ..permissions.models import Permission
 from ..recognition.feature_extraction.face_feature_extarction_model import FaceFeatureExtractionModel
 from ..recognition.feature_extraction.pose_feature_extraction_model import PoseFeatureExtractionModel
 
@@ -139,7 +140,7 @@ def camera_feed_upload(request):
             silhouette_embedding = silhouette_model.extract_features(feed.image_path_silhouette.path)
 
 
-            FACE_THRESHOLD = 0.75
+            FACE_THRESHOLD = 0.75 # 0.65
             SILHOUETTE_THRESHOLD = 0.04
 
             # Perform matching based on embeddings
@@ -169,6 +170,35 @@ def camera_feed_upload(request):
             # Update the authorization status
             feed.authorized = matched_faces + matched_silhouettes > 0
             # await asyncio.to_thread(feed.save)  # Save in a non-blocking way
+
+            if feed.authorized:
+                user = None
+                if matched_faces > 0:
+                    user = UserImage.get_closest(
+                        embedding=face_embedding,
+                        image_type='face'
+                    ).user
+                else:
+                    user = UserImage.get_closest(
+                        embedding=silhouette_embedding,
+                        image_type='silhouette'
+                    ).user
+
+                zone = camera.zone
+                permissions = Permission.objects.filter(zones=zone)
+
+                user_permissions = Permission.objects.filter(users=user.profile)
+                missing_permissions = [permission for permission in permissions if permission not in user_permissions]
+
+                if missing_permissions:
+                    logging.info("\n========================================================\n")
+                    logging.info("================[ Zone Permissions Issues ]=============\n")
+                    logging.info(f"================[     {' '.join(str(permission.label) for permission in permissions)} ]=============\n")
+                    logging.info(f"================[ Zone: {zone.label}       ]=============\n")
+                    logging.info(f"================[ User: {user.email}       ]=============\n")
+                    logging.info(f"================[ Missing: {' '.join(str(permission.label) for permission in missing_permissions)} ]=============\n")
+                    logging.info("========================================================\n")
+                    feed.authorized = False
 
             feed.save()
 
