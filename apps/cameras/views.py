@@ -189,15 +189,15 @@ def camera_feed_upload(request):
                 permissions = Permission.objects.filter(zones=zone)
 
                 user_permissions = Permission.objects.filter(users=user.profile)
-                missing_permissions = [permission for permission in permissions if permission not in user_permissions]
+                valid_permissions = [permission for permission in permissions if permission in user_permissions]
 
-                if missing_permissions:
+                if len(valid_permissions) == 0:
                     logging.info("\n========================================================\n")
                     logging.info("================[ Zone Permissions Issues ]=============\n")
                     logging.info(f"================[     {' '.join(str(permission.label) for permission in permissions)} ]=============\n")
                     logging.info(f"================[ Zone: {zone.label}       ]=============\n")
                     logging.info(f"================[ User: {user.email}       ]=============\n")
-                    logging.info(f"================[ Missing: {' '.join(str(permission.label) for permission in missing_permissions)} ]=============\n")
+                    logging.info(f"================[ Missing: {' '.join(str(permission.label) for permission in permissions if permission not in user_permissions)} ]=============\n")
                     logging.info("========================================================\n")
                     feed.authorized = False
 
