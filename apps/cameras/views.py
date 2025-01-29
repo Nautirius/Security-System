@@ -189,7 +189,7 @@ def camera_feed_upload(request):
                 permissions = Permission.objects.filter(zones=zone)
 
                 user_permissions = Permission.objects.filter(users=user.profile)
-                missing_permissions = [permission for permission in permissions if permission in user_permissions]
+                missing_permissions = [permission for permission in permissions if permission not in user_permissions]
 
                 if missing_permissions:
                     logging.info("\n========================================================\n")

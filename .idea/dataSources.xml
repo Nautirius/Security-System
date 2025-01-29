@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5432/pite2024</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="pite2024@localhost [2]" uuid="a82530a6-fab8-432e-bb4b-325cd6e23b3a">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/pite2024</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
