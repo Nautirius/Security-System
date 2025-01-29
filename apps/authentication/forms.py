@@ -10,7 +10,8 @@ class CustomSignupForm(SignupForm):
         max_length=30,
         label="Firstname",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter First Name"
         })
     )
@@ -18,7 +19,8 @@ class CustomSignupForm(SignupForm):
         max_length=30,
         label="Lastname",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter Last Name"
         })
     )
@@ -26,7 +28,8 @@ class CustomSignupForm(SignupForm):
         max_length=15,
         label="Phone Number",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter phone number"
         })
     )
@@ -34,7 +37,8 @@ class CustomSignupForm(SignupForm):
         max_length=255,
         label="Street",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter street"
         })
     )
@@ -42,7 +46,8 @@ class CustomSignupForm(SignupForm):
         max_length=100,
         label="City",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter city"
         })
     )
@@ -50,7 +55,8 @@ class CustomSignupForm(SignupForm):
         max_length=10,
         label="ZIP Code",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter ZIP Code"
         })
     )

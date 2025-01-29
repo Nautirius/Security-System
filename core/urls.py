@@ -42,14 +42,14 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
 @login_required
 def dashboard_view(request: HttpRequest) -> HttpResponse:
     return render(request, "dashboard.html", {})
 
+
 def index_view(request: HttpRequest) -> HttpResponse:
     return render(request, "index.html", {})
-
-
 
 
 urlpatterns = [
@@ -77,4 +77,3 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

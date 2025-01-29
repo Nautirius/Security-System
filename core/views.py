@@ -8,6 +8,7 @@ from apps.buildings.models import Zone, Company, Building
 from apps.cameras.models import Camera
 from apps.permissions.models import Permission
 
+
 @login_required
 def full_text_search_view(request):
     query = request.GET.get("q", "")
@@ -17,7 +18,8 @@ def full_text_search_view(request):
         search_query = SearchQuery(query)
 
         results['user_profiles'] = UserProfile.objects.annotate(
-            search=SearchVector('first_name', 'last_name', 'email', 'phone', 'street', 'city', 'zip_code', 'companies__name'),
+            search=SearchVector('first_name', 'last_name', 'email', 'phone', 'street', 'city', 'zip_code',
+                                'companies__name'),
         ).filter(search=search_query)
 
         results['companies'] = Company.objects.annotate(

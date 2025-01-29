@@ -38,13 +38,14 @@ def camera_create(request):
         zone = Zone.objects.get(pk=zone_id)
         coordinate_x = request.POST['coordinate_x']
         coordinate_y = request.POST['coordinate_y']
-        if label and zone and coordinate_x and coordinate_y:  # TODO: bad request handling
+        if label and zone and coordinate_x and coordinate_y:
             camera = Camera(label=label, zone=zone, coordinate_x=coordinate_x, coordinate_y=coordinate_y)
             camera.save()
         return redirect('camera_list')
     else:
         zones = Zone.objects.all()
         return render(request, 'cameras/camera_create.html', {'zones': zones})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -107,9 +108,10 @@ def camera_feed_grid(request):
     }
     return render(request, 'cameras/camera_feed_grid.html', context)
 
-# @sync_to_async
+
 def get_image_embeddings(model: FaceFeatureExtractionModel, feed_path):
     return model.extract_features(feed_path)
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -139,8 +141,7 @@ def camera_feed_upload(request):
             face_embedding = face_model.extract_features(feed.image_path_face.path)
             silhouette_embedding = silhouette_model.extract_features(feed.image_path_silhouette.path)
 
-
-            FACE_THRESHOLD = 0.75 # 0.65
+            FACE_THRESHOLD = 0.75  # 0.65
             SILHOUETTE_THRESHOLD = 0.04
 
             # Perform matching based on embeddings
@@ -188,7 +189,7 @@ def camera_feed_upload(request):
                 permissions = Permission.objects.filter(zones=zone)
 
                 user_permissions = Permission.objects.filter(users=user.profile)
-                missing_permissions = [permission for permission in permissions if permission not in user_permissions]
+                missing_permissions = [permission for permission in permissions if permission in user_permissions]
 
                 if missing_permissions:
                     logging.info("\n========================================================\n")
@@ -209,7 +210,6 @@ def camera_feed_upload(request):
     except Exception as e:
         logging.error(e)
         return render(request, 'cameras/camera_feed_upload.html', {'errors': 'chuj'})
-
 
 
 # def compare_embeddings(embedding1, embedding2, threshold=0.5):

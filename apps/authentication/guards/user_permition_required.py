@@ -3,6 +3,7 @@ from functools import wraps
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 
+
 def custom_permission_required(field_name, expected_value, redirect_url=None):
     def decorator(view_func):
         @wraps(view_func)

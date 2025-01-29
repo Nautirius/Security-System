@@ -2,6 +2,7 @@ import os
 from django.conf import settings
 from pathlib import Path
 
+
 class FileStorage:
     def __init__(self, base_dir=None):
         self.base_dir = base_dir or settings.STORAGE_PATH

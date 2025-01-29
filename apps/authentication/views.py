@@ -82,8 +82,6 @@ def signup(request: HttpRequest) -> HttpResponse:
             logging.error("\n\n" + "="*20+ '\n')
             return render(request, 'account/signup.html', {'form': form})
 
-
-
     form = CustomSignupForm()
     return render(request, 'account/signup.html', {'form': form})
 
@@ -101,6 +99,7 @@ def uploaded_profile_photos(request: HttpRequest) -> HttpResponse:
         'face_images': face_images,
         'silhouette_images': silhouette_images
     })
+
 
 @api_view(['GET'])
 def user_photo(request,  folder_name: str, photo_type: str, name: str):

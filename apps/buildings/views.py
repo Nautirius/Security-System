@@ -15,12 +15,15 @@ from ..authentication.models import Membership, UserProfile
 def home(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/home.html')
 
+
 def company_home(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/company/home.html')
+
 
 def company_list(request: HttpRequest) -> HttpResponse:
     companies = Company.objects.all()
     return render(request, 'buildings/company/company_list.html', {'companies': companies})
+
 
 def company_by_id(request: HttpRequest, pk: int) -> HttpResponse:
     company = get_object_or_404(Company, pk=pk)
@@ -32,8 +35,9 @@ def company_by_id(request: HttpRequest, pk: int) -> HttpResponse:
     return render(
             request,
             'buildings/company/company_by_id.html',
-            {'pk': pk , "company": company, "employees_with_roles": employees_with_roles},
+            {'pk': pk, "company": company, "employees_with_roles": employees_with_roles},
         )
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -46,6 +50,7 @@ def company_create(request: HttpRequest) -> HttpResponse:
         return redirect('company_list')
     else:
         return render(request, 'buildings/company/company_create.html')
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -91,8 +96,9 @@ def assign_user_to_company(request: HttpRequest) -> HttpResponse:
     return render(
         request,
         'buildings/company/assign_user_to_company.html',
-        { "users": users, "companies": companies }
+        {"users": users, "companies": companies}
     )
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -103,9 +109,10 @@ def company_update(request: HttpRequest, pk) -> HttpResponse:
         if name:
             company.name = name
             company.save()
-        return redirect('company_list')  # TODO: bad request handling
+        return redirect('company_list')
     else:
         return render(request, 'buildings/company/company_update.html', {'company_id': pk, 'old_company': company})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -114,6 +121,7 @@ def company_delete(request: HttpRequest, pk: int) -> HttpResponse:
     if company:
         company.delete()
     return redirect('company_list')
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -128,6 +136,7 @@ def company_fire_user(request: HttpRequest, company_id: int, user_id: int) -> Ht
 
     return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
 
+
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def company_promote_user(request: HttpRequest, company_id: int, user_id: int) -> HttpResponse:
@@ -140,6 +149,7 @@ def company_promote_user(request: HttpRequest, company_id: int, user_id: int) ->
         membership.save()
 
     return redirect("/buildings/companies/by-id/{pk}".format(pk=company_id))
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -158,10 +168,12 @@ def company_degrade_user(request: HttpRequest, company_id: int, user_id: int) ->
 def buildings_home(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/building/home.html')
 
+
 @login_required
 def building_list(request: HttpRequest) -> HttpResponse:
     buildings = Building.objects.all()
     return render(request, 'buildings/building/building_list.html', {'buildings': buildings})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -177,6 +189,7 @@ def building_create(request: HttpRequest) -> HttpResponse:
     else:
         companies = Company.objects.all()
         return render(request, 'buildings/building/building_create.html', {'companies': companies})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -196,6 +209,7 @@ def building_update(request: HttpRequest, pk: int) -> HttpResponse:
         return render(request, 'buildings/building/building_update.html', {'building_id': pk, 'old_building': building,
                                                                            'companies': companies})
 
+
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def building_delete(request: HttpRequest, pk: int) -> HttpResponse:
@@ -208,10 +222,12 @@ def building_delete(request: HttpRequest, pk: int) -> HttpResponse:
 def zone_home(request: HttpRequest) -> HttpResponse:
     return render(request, 'buildings/zone/home.html')
 
+
 @login_required
 def zone_list(request: HttpRequest) -> HttpResponse:
     zones = Zone.objects.all()
     return render(request, 'buildings/zone/zone_list.html', {'zones': zones})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -227,6 +243,7 @@ def zone_create(request: HttpRequest) -> HttpResponse:
     else:
         buildings = Building.objects.all()
         return render(request, 'buildings/zone/zone_create.html', {'buildings': buildings})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -246,6 +263,7 @@ def zone_update(request: HttpRequest, pk: int) -> HttpResponse:
         return render(request, 'buildings/zone/zone_update.html', {'zone_id': pk, 'old_zone': zone,
                                                                    'buildings': buildings})
 
+
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def zone_delete(request: HttpRequest, pk: int) -> HttpResponse:
@@ -253,5 +271,3 @@ def zone_delete(request: HttpRequest, pk: int) -> HttpResponse:
     if zone:
         zone.delete()
     return redirect('zone_list')
-
-

@@ -313,22 +313,22 @@
                     </summary>
 
                     <ul class="mt-2 space-y-1 px-4">
-                        <li>
-                            <a href="#"
-                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                                Details
-                            </a>
-                        </li>
+{#                        <li>#}
+{#                            <a href="#"#}
+{#                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">#}
+{#                                Details#}
+{#                            </a>#}
+{#                        </li>#}
+
+{#                        <li>#}
+{#                            <a href="#"#}
+{#                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">#}
+{#                                Security#}
+{#                            </a>#}
+{#                        </li>#}
 
                         <li>
-                            <a href="#"
-                                class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                                Security
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="/dashboard/"
+                            <a href="/auth/uploaded-photos-list/"
                                 class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                                 My Photos
                             </a>
@@ -356,9 +356,9 @@
 
             <div>
                 <p class="text-xs">
-                    <strong class="block font-medium">User Example</strong>
+                    <strong class="block font-medium">{{ user.first_name }} {{ user.last_name }}</strong>
 
-                    <span> user@example.com </span>
+                    <span>{{ user.email }}</span>
                 </p>
             </div>
         </a>

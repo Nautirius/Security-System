@@ -56,7 +56,10 @@
                 {% else %} outline outline-red-500 outline-[3px] outline-inset
                 {% endif %}"
             >
-            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ camera.label }} - {{ camera.zone.building.label }} - {{ camera.zone.label }}</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ camera.label }} ({{ camera.zone.building.company }}
+                building {{ camera.zone.building.label }}
+                zone {{ camera.zone.label }})
+            </h3>
                 <div class="font-semibold h-4 py-4  my-4 rounded-md flex items-center justify-center
                  {% if camera.feeds.authorized %} bg-green-200
                  {% else %} bg-red-200

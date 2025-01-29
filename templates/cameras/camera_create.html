@@ -29,7 +29,7 @@
                     <select name="zone_id" id="zone_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm">
                         {% for zone in zones %}
                             <option value={{ zone.id }}>
-                                {{ zone.label }} ({{ zone.building.company.name }} - {{ zone.building.label }})
+                                {{ zone.label }} ({{ zone.building.company.name }} building {{ zone.building.label }})
                             </option>
                         {% endfor %}
                     </select>
