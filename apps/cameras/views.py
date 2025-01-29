@@ -135,6 +135,10 @@ def camera_feed_upload(request):
             image_path.seek(0)
             feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
 
+            feed.authorized = False
+            feed.detected_user = None
+            feed.save()
+
             face_model = FaceFeatureExtractionModel()
             silhouette_model = PoseFeatureExtractionModel()
 
@@ -185,10 +189,14 @@ def camera_feed_upload(request):
                         image_type='silhouette'
                     ).user
 
+                feed.detected_user = user
+
                 zone = camera.zone
                 permissions = Permission.objects.filter(zones=zone)
 
                 user_permissions = Permission.objects.filter(users=user.profile)
+                logging.info(f"User: {user.first_name} {user.last_name}")
+
                 valid_permissions = [permission for permission in permissions if permission in user_permissions]
 
                 if len(valid_permissions) == 0:
@@ -209,7 +217,8 @@ def camera_feed_upload(request):
             return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
     except Exception as e:
         logging.error(e)
-        return render(request, 'cameras/camera_feed_upload.html', {'errors': 'chuj'})
+        return redirect('camera_feed_grid')
+        # return render(request, 'cameras/camera_feed_upload.html', {'errors': cameras})
 
 
 # def compare_embeddings(embedding1, embedding2, threshold=0.5):
