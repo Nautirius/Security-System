@@ -18,7 +18,7 @@
         {% if user.is_authenticated %}
             <div class="hover:text-primary transition flex flex-row items-center gap-4 font-bold">
                 <p>
-                    <a href="/my-profile" class="hover:text-primary transition font-bold">{{ user.email }}</a>
+                    <a href="/auth/uploaded-photos-list/" class="hover:text-primary transition font-bold">{{ user.email }}</a>
                 </p>
                 <a href="{% url 'account_logout' %}" class="hover:text-primary transition font-bold">
 {#                <a href="{'/auth/accounts/logout'%}" class="hover:text-primary transition font-bold">#}

@@ -73,7 +73,7 @@
 {#                <p class="text-sm text-gray-500">Silhouette Feed</p>#}
 {#                <img src="{{ camera.feeds.image_path_silhouette.url }}" alt="Silhouette Feed" class="rounded-md object-cover h-36 w-full">#}
                 {% if camera.feeds.detected_user %}
-                    <p class="mt-2 text-sm text-gray-500">Detected user: {{ camera.feeds.detected_user.first_name }} {{ camera.feeds.detected_user.last_name }} ({{ camera.feeds.detected_user.email }})</p>
+                    <p class="mt-2 text-sm text-gray-500">Detected user: {{ camera.feeds.detected_user.profile.first_name }} {{ camera.feeds.detected_user.profile.last_name }} ({{ camera.feeds.detected_user.profile.email }})</p>
                 {% else %}
                     <p class="mt-2 text-sm text-gray-500">No user detected</p>
                 {% endif %}
