@@ -1,12 +1,23 @@
+import logging
+import time
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Camera, CameraFeed
+from .. import cameras
+from ..authentication.models import UserImage
 from ..buildings.models import Company, Building, Zone
 from ..authentication.guards.user_membership_role import user_membership_role
 from django.conf import settings
-from django.contrib.auth.decorators import login_required  # TODO: login requirement for CRUD views
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse
 from django.core.files.base import ContentFile
 import os
+import asyncio
+from asgiref.sync import async_to_sync, sync_to_async
+
+from ..permissions.models import Permission
+from ..recognition.feature_extraction.face_feature_extarction_model import FaceFeatureExtractionModel
+from ..recognition.feature_extraction.pose_feature_extraction_model import PoseFeatureExtractionModel
 
 
 def camera_home(request: HttpRequest) -> HttpResponse:
@@ -27,13 +38,14 @@ def camera_create(request):
         zone = Zone.objects.get(pk=zone_id)
         coordinate_x = request.POST['coordinate_x']
         coordinate_y = request.POST['coordinate_y']
-        if label and zone and coordinate_x and coordinate_y:  # TODO: bad request handling
+        if label and zone and coordinate_x and coordinate_y:
             camera = Camera(label=label, zone=zone, coordinate_x=coordinate_x, coordinate_y=coordinate_y)
             camera.save()
         return redirect('camera_list')
     else:
         zones = Zone.objects.all()
         return render(request, 'cameras/camera_create.html', {'zones': zones})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -97,28 +109,120 @@ def camera_feed_grid(request):
     return render(request, 'cameras/camera_feed_grid.html', context)
 
 
+def get_image_embeddings(model: FaceFeatureExtractionModel, feed_path):
+    return model.extract_features(feed_path)
+
+
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def camera_feed_upload(request):
-    if request.method == 'POST':
-        camera_id = request.POST['camera']
-        image_path = request.FILES['image_path']
-        camera = get_object_or_404(Camera, pk=camera_id)
+    try:
+        if request.method == 'POST':
+            camera_id = request.POST['camera']
+            image_path = request.FILES['image_path']
+            camera = get_object_or_404(Camera, pk=camera_id)
 
-        feed, created = CameraFeed.objects.get_or_create(camera=camera)
+            feed, created = CameraFeed.objects.get_or_create(camera=camera)
 
-        if feed.image_path_face:
-            feed.image_path_face.delete(save=False)
-        if feed.image_path_silhouette:
-            feed.image_path_silhouette.delete(save=False)
+            # Delete existing images if present
+            if feed.image_path_face:
+                feed.image_path_face.delete(save=False)
+            if feed.image_path_silhouette:
+                feed.image_path_silhouette.delete(save=False)
 
-        feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
-        image_path.seek(0)
-        feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
-        feed.save()
+            # Save the uploaded image files
+            feed.image_path_face.save(f"{camera.label}_face.jpg", ContentFile(image_path.read()))
+            image_path.seek(0)
+            feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
 
+            feed.authorized = False
+            feed.detected_user = None
+            feed.save()
+
+            face_model = FaceFeatureExtractionModel()
+            silhouette_model = PoseFeatureExtractionModel()
+
+            face_embedding = face_model.extract_features(feed.image_path_face.path)
+            silhouette_embedding = silhouette_model.extract_features(feed.image_path_silhouette.path)
+
+            FACE_THRESHOLD = 0.75  # 0.65
+            SILHOUETTE_THRESHOLD = 0.04
+
+            # Perform matching based on embeddings
+            matching_face_images = UserImage.filter_by_embedding(
+                embedding=face_embedding,
+                threshold=FACE_THRESHOLD,
+                image_type='face'
+            )
+
+            for image in matching_face_images:
+                logging.info(f"Image ID: {image.id}, Distance: {image.distance}")
+
+            matching_silhouette_images = UserImage.filter_by_embedding(
+                embedding=silhouette_embedding,
+                threshold=SILHOUETTE_THRESHOLD,
+                image_type='silhouette'
+            )
+
+            for image in matching_silhouette_images:
+                logging.info(f"Image ID: {image.id}, Distance: {image.distance}")
+
+            matched_faces = len(matching_face_images)
+            matched_silhouettes = len(matching_silhouette_images)
+            logging.info(f"Matching Faces: {matched_faces}")
+            logging.info(f"Matching Silhouettes: {matched_silhouettes}")
+
+            # Update the authorization status
+            feed.authorized = matched_faces + matched_silhouettes > 0
+            # await asyncio.to_thread(feed.save)  # Save in a non-blocking way
+
+            if feed.authorized:
+                user = None
+                if matched_faces > 0:
+                    user = UserImage.get_closest(
+                        embedding=face_embedding,
+                        image_type='face'
+                    ).user
+                else:
+                    user = UserImage.get_closest(
+                        embedding=silhouette_embedding,
+                        image_type='silhouette'
+                    ).user
+
+                feed.detected_user = user
+
+                zone = camera.zone
+                permissions = Permission.objects.filter(zones=zone)
+
+                user_permissions = Permission.objects.filter(users=user.profile)
+                logging.info(f"User: {user.first_name} {user.last_name}")
+
+                valid_permissions = [permission for permission in permissions if permission in user_permissions]
+
+                if len(valid_permissions) == 0:
+                    logging.info("\n========================================================\n")
+                    logging.info("================[ Zone Permissions Issues ]=============\n")
+                    logging.info(f"================[     {' '.join(str(permission.label) for permission in permissions)} ]=============\n")
+                    logging.info(f"================[ Zone: {zone.label}       ]=============\n")
+                    logging.info(f"================[ User: {user.email}       ]=============\n")
+                    logging.info(f"================[ Missing: {' '.join(str(permission.label) for permission in permissions if permission not in user_permissions)} ]=============\n")
+                    logging.info("========================================================\n")
+                    feed.authorized = False
+
+            feed.save()
+
+            return redirect('camera_feed_grid')
+        else:
+            cameras = Camera.objects.all()
+            return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
+    except Exception as e:
+        logging.error(e)
         return redirect('camera_feed_grid')
-    else:
-        cameras = Camera.objects.all()
-        return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
+        # return render(request, 'cameras/camera_feed_upload.html', {'errors': cameras})
 
+
+# def compare_embeddings(embedding1, embedding2, threshold=0.5):
+#     if not embedding1 or not embedding2:
+#         return False
+#     distance = sum((e1 - e2) ** 2 for e1, e2 in zip(embedding1, embedding2)) ** 0.5
+#     return distance < threshold

@@ -1,0 +1,140 @@
+{% extends 'layouts/dashboard_layout.html' %}
+{% load socialaccount %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block dashboard_content %}
+    {% include 'partials/dashboard-header.html' with title="Dashboard" subtitle="Welcome to your workspace" %}
+
+    <section class="w-full grid gap-4 grid-cols-12 mt-16">
+        {% if results %}
+            <header  class="col-span-full">
+                <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Results for: "{{ query }}"</h2>
+            </header>
+
+
+            <h3 class="mt-8 col-span-full text-xl/7 font-bold text-gray-600 sm:truncate sm:text-2xl sm:tracking-tight">User Profiles</h3>
+
+                {% for user_profile in results.user_profiles %}
+                    <a href="/user_management/edit/{{ user_profile.user.id  }}" class="col-span-full md:col-span-6 lg:col-span-4 block rounded-lg border border-gray-300 bg-white p-6 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all">
+                        <div class="text-center aspect-[2/1] flex flex-center justify-center items-center flex-wrap">
+                            <h3 class="text-lg font-semibold text-gray-900">{{ user_profile.user.id  }}. {{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
+                            <div class="divide-y divide-slate h-[3px] w-full flex flex-col"><span></span><span></span></div>
+                            <div class="flex flex-col w-full">
+                                <p class="mt-2 text-sm text-gray-600">{{ user_profile.email }}</p>
+                                <p class="mt-2 text-sm text-gray-600">{{ user_profile.phone }}</p>
+                                <p class="mt-2 text-sm text-gray-600">{{ user_profile.city }}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% empty %}
+                    {% with url='/dashboard/' text='No results' description='' %}
+                        {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                    {% endwith %}
+                {% endfor %}
+
+
+            <h3 class="mt-8 col-span-full text-xl/7 font-bold text-gray-600 sm:truncate sm:text-2xl sm:tracking-tight">Companies</h3>
+
+            {% for company in results.companies %}
+                <a href="/buildings/companies/{{ company.id }}/update" class="col-span-full md:col-span-6 lg:col-span-4 block rounded-lg border border-gray-300 bg-white p-6 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all">
+                    <div class="text-center aspect-[2/1] flex flex-center justify-center items-center flex-wrap">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ company.id  }}. {{ company.name }}</h3>
+                        <div class="divide-y divide-slate h-[3px] w-full flex flex-col"><span></span><span></span></div>
+                    </div>
+                </a>
+            {% empty %}
+                {% with url='/dashboard/' text='No results' description='' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+            {% endfor %}
+
+
+            <h3 class="mt-8 col-span-full text-xl/7 font-bold text-gray-600 sm:truncate sm:text-2xl sm:tracking-tight">Permissions</h3>
+
+            {% for permission in results.permissions %}
+                <a href="permissions/update-permission/{{ permission.id }}" class="col-span-full md:col-span-6 lg:col-span-4 block rounded-lg border border-gray-300 bg-white p-6 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all">
+                    <div class="text-center aspect-[2/1] flex flex-center justify-center items-center flex-wrap">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ permission.id  }}. {{ permission.label }}</h3>
+                        <div class="divide-y divide-slate h-[3px] w-full flex flex-col"><span></span><span></span></div>
+                    </div>
+                </a>
+            {% empty %}
+                {% with url='/dashboard/' text='No results' description='' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+            {% endfor %}
+
+            <h3 class="mt-8 col-span-full text-xl/7 font-bold text-gray-600 sm:truncate sm:text-2xl sm:tracking-tight">Cameras</h3>
+            {% for camera in results.cameras %}
+                <a href="/cameras/{{ camera.id }}/update" class="col-span-full md:col-span-6 lg:col-span-4 block rounded-lg border border-gray-300 bg-white p-6 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all">
+                    <div class="text-center aspect-[2/1] flex flex-center justify-center items-center flex-wrap">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ camera.id  }}. {{ camera.label }}</h3>
+                        <div class="divide-y divide-slate h-[3px] w-full flex flex-col"><span></span><span></span></div>
+                        <div class="flex flex-col w-full">
+                            <p><strong>Zone:</strong> {{ camera.zone.label }} ({{ camera.zone.building.label }})</p>
+                            <p><strong>Coordinates:</strong> X: {{ camera.coordinate_x }}, Y: {{ camera.coordinate_y }}</p>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                {% with url='/dashboard/' text='No results' description='' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+            {% endfor %}
+
+
+
+            <h3 class="mt-8 col-span-full text-xl/7 font-bold text-gray-600 sm:truncate sm:text-2xl sm:tracking-tight">Zones</h3>
+            {% for zone in results.zones %}
+                <a href="/buildings/zones/{{ zone.id }}/edit" class="col-span-full md:col-span-6 lg:col-span-4 block rounded-lg border border-gray-300 bg-white p-6 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all">
+                    <div class="text-center aspect-[2/1] flex flex-center justify-center items-center flex-wrap">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ zone.id  }}. {{ zone.label }}</h3>
+                        <div class="divide-y divide-slate h-[3px] w-full flex flex-col"><span></span><span></span></div>
+                        <div class="flex flex-col w-full">
+
+                            <p><strong>Buidling:</strong> {{ camera.zone.label }} ({{ zone.building.label }})</p>
+
+                            <div class="mt-4 flex flex-col gap-y-4 p-4 border rounded-[10px]">
+                                {% for camera in zone.cameras.all %}
+                                    <p><strong>{{ camera.label }} :</strong>  X: {{ camera.coordinate_x }}, Y: {{ camera.coordinate_y }} </p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                {% with url='/dashboard/' text='No results' description='' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+            {% endfor %}
+
+
+            <h3 class="mt-8 col-span-full text-xl/7 font-bold text-gray-600 sm:truncate sm:text-2xl sm:tracking-tight">Buildings</h3>
+            {% for building in results.buildings %}
+                <a href="/buildings/buildings/{{ building.id }}/update" class="col-span-full md:col-span-6 lg:col-span-4 block rounded-lg border border-gray-300 bg-white p-6 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-all">
+                    <div class="text-center aspect-[1/1] flex flex-center justify-center items-center flex-wrap">
+                        <h3 class="text-lg font-semibold text-gray-900">{{ building.id  }}. {{ building.label }}</h3>
+                        <div class="divide-y divide-slate h-[3px] w-full flex flex-col"><span></span><span></span></div>
+                        <div class="flex flex-col w-full">
+
+                            <div class="mt-4 flex flex-col items-start gap-y-4 py-4 px-12 border rounded-[10px]">
+                                <p><strong>Zones:</strong></p>
+                                {% for zone in building.zones.all %}
+                                    <p><strong>{{ zone.id }}. {{ zone.label }}</strong> </p>
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                {% with url='/dashboard/' text='No results' description='' %}
+                    {% include 'partials/clickable_card.html' with url=url text=text description=description %}
+                {% endwith %}
+            {% endfor %}
+        {% else %}
+            <p>Enter query to filter out resources</p>
+        {% endif %}
+    </section>
+{% endblock %}

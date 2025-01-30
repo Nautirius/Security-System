@@ -79,7 +79,6 @@ INSTALLED_APPS = [
     'apps.buildings',
     'apps.cameras',
     'apps.recognition',
-    'apps.companies',
     'apps.permissions',
     'apps.user_management',
 ]
