@@ -56,7 +56,10 @@
                 {% else %} outline outline-red-500 outline-[3px] outline-inset
                 {% endif %}"
             >
-            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ camera.label }} - {{ camera.zone.building.label }} - {{ camera.zone.label }}</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-2">{{ camera.label }} ({{ camera.zone.building.company }}
+                building {{ camera.zone.building.label }}
+                zone {{ camera.zone.label }})
+            </h3>
                 <div class="font-semibold h-4 py-4  my-4 rounded-md flex items-center justify-center
                  {% if camera.feeds.authorized %} bg-green-200
                  {% else %} bg-red-200
@@ -65,10 +68,15 @@
                     Authorized: {{ camera.feeds.authorized }}
                 </div>
             {% if camera.feeds %}
-                <p class="text-sm text-gray-500">Feed</p>
+                <p class="text-sm text-gray-500">Live Feed</p>
                 <img src="{{ camera.feeds.image_path_face.url }}" alt="Face Feed" class="rounded-md object-cover h-72 w-full mb-4">
 {#                <p class="text-sm text-gray-500">Silhouette Feed</p>#}
 {#                <img src="{{ camera.feeds.image_path_silhouette.url }}" alt="Silhouette Feed" class="rounded-md object-cover h-36 w-full">#}
+                {% if camera.feeds.detected_user %}
+                    <p class="mt-2 text-sm text-gray-500">Detected user: {{ camera.feeds.detected_user.first_name }} {{ camera.feeds.detected_user.last_name }} ({{ camera.feeds.detected_user.email }})</p>
+                {% else %}
+                    <p class="mt-2 text-sm text-gray-500">No user detected</p>
+                {% endif %}
                 <p class="mt-2 text-sm text-gray-500">{{ camera.feeds.date_uploaded }}</p>
             {% else %}
             <div class="bg-gray-200 h-48 rounded-md flex items-center justify-center">

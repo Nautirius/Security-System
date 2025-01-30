@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
+
 class FeatureExtractionModel(ABC):
     @abstractmethod
     def extract_features(self, image_path: str) -> Any:

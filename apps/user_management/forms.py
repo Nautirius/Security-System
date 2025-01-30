@@ -13,7 +13,8 @@ class CreateUserManagementForm(SignupForm):
         max_length=30,
         label="Firstname",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter First Name"
         })
     )
@@ -21,7 +22,8 @@ class CreateUserManagementForm(SignupForm):
         max_length=30,
         label="Lastname",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter Last Name"
         })
     )
@@ -29,7 +31,8 @@ class CreateUserManagementForm(SignupForm):
         max_length=15,
         label="Phone Number",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter phone number"
         })
     )
@@ -37,7 +40,8 @@ class CreateUserManagementForm(SignupForm):
         max_length=255,
         label="Street",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter street"
         })
     )
@@ -45,7 +49,8 @@ class CreateUserManagementForm(SignupForm):
         max_length=100,
         label="City",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter city"
         })
     )
@@ -53,7 +58,8 @@ class CreateUserManagementForm(SignupForm):
         max_length=10,
         label="ZIP Code",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter ZIP Code"
         })
     )
@@ -61,12 +67,13 @@ class CreateUserManagementForm(SignupForm):
         max_length=10,
         label="Company",
         widget=forms.TextInput(attrs={
-            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 focus:ring-slate-500 sm:text-sm",
+            "class": "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-slate-500 "
+                     "focus:ring-slate-500 sm:text-sm",
             "placeholder": "Enter company name"
         })
     )
 
-    def save(self, request: HttpRequest) -> Tuple[User,UserProfile]:
+    def save(self, request: HttpRequest) -> Tuple[User, UserProfile]:
         user = super().save(request)
 
         profile, created = UserProfile.objects.get_or_create(user=user)
@@ -82,10 +89,7 @@ class CreateUserManagementForm(SignupForm):
 
         company_name = request.POST['company']
 
-        return user,profile
-
-
-
+        return user, profile
 
 
 class UpdateUserManagementForm(forms.Form):
@@ -156,4 +160,4 @@ class UpdateUserManagementForm(forms.Form):
 
         company_name = self.cleaned_data.get('company', '')
 
-        return user,profile
+        return user, profile

@@ -16,7 +16,7 @@
             <select id="camera" name="camera" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                 {% for camera in cameras %}
                 <option value="{{ camera.id }}">
-                    {{ camera.label }} ({{ camera.zone.building.company.name }} - {{ camera.zone.building.label }} - {{ camera.zone.label }})
+                    {{ camera.label }} ({{ camera.zone.building.company.name }} building {{ camera.zone.building.label }} zone {{ camera.zone.label }})
                 </option>
                 {% endfor %}
             </select>

@@ -38,13 +38,14 @@ def camera_create(request):
         zone = Zone.objects.get(pk=zone_id)
         coordinate_x = request.POST['coordinate_x']
         coordinate_y = request.POST['coordinate_y']
-        if label and zone and coordinate_x and coordinate_y:  # TODO: bad request handling
+        if label and zone and coordinate_x and coordinate_y:
             camera = Camera(label=label, zone=zone, coordinate_x=coordinate_x, coordinate_y=coordinate_y)
             camera.save()
         return redirect('camera_list')
     else:
         zones = Zone.objects.all()
         return render(request, 'cameras/camera_create.html', {'zones': zones})
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -107,9 +108,10 @@ def camera_feed_grid(request):
     }
     return render(request, 'cameras/camera_feed_grid.html', context)
 
-# @sync_to_async
+
 def get_image_embeddings(model: FaceFeatureExtractionModel, feed_path):
     return model.extract_features(feed_path)
+
 
 @login_required
 @user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
@@ -133,14 +135,17 @@ def camera_feed_upload(request):
             image_path.seek(0)
             feed.image_path_silhouette.save(f"{camera.label}_silhouette.jpg", ContentFile(image_path.read()))
 
+            feed.authorized = False
+            feed.detected_user = None
+            feed.save()
+
             face_model = FaceFeatureExtractionModel()
             silhouette_model = PoseFeatureExtractionModel()
 
             face_embedding = face_model.extract_features(feed.image_path_face.path)
             silhouette_embedding = silhouette_model.extract_features(feed.image_path_silhouette.path)
 
-
-            FACE_THRESHOLD = 0.75 # 0.65
+            FACE_THRESHOLD = 0.75  # 0.65
             SILHOUETTE_THRESHOLD = 0.04
 
             # Perform matching based on embeddings
@@ -184,19 +189,23 @@ def camera_feed_upload(request):
                         image_type='silhouette'
                     ).user
 
+                feed.detected_user = user
+
                 zone = camera.zone
                 permissions = Permission.objects.filter(zones=zone)
 
                 user_permissions = Permission.objects.filter(users=user.profile)
-                missing_permissions = [permission for permission in permissions if permission not in user_permissions]
+                logging.info(f"User: {user.first_name} {user.last_name}")
 
-                if missing_permissions:
+                valid_permissions = [permission for permission in permissions if permission in user_permissions]
+
+                if len(valid_permissions) == 0:
                     logging.info("\n========================================================\n")
                     logging.info("================[ Zone Permissions Issues ]=============\n")
                     logging.info(f"================[     {' '.join(str(permission.label) for permission in permissions)} ]=============\n")
                     logging.info(f"================[ Zone: {zone.label}       ]=============\n")
                     logging.info(f"================[ User: {user.email}       ]=============\n")
-                    logging.info(f"================[ Missing: {' '.join(str(permission.label) for permission in missing_permissions)} ]=============\n")
+                    logging.info(f"================[ Missing: {' '.join(str(permission.label) for permission in permissions if permission not in user_permissions)} ]=============\n")
                     logging.info("========================================================\n")
                     feed.authorized = False
 
@@ -208,8 +217,8 @@ def camera_feed_upload(request):
             return render(request, 'cameras/camera_feed_upload.html', {'cameras': cameras})
     except Exception as e:
         logging.error(e)
-        return render(request, 'cameras/camera_feed_upload.html', {'errors': 'chuj'})
-
+        return redirect('camera_feed_grid')
+        # return render(request, 'cameras/camera_feed_upload.html', {'errors': cameras})
 
 
 # def compare_embeddings(embedding1, embedding2, threshold=0.5):

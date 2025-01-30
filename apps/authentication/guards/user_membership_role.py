@@ -16,7 +16,7 @@ def user_membership_role(roles: List[str]):
                 return render(
                     request,
                     '403.html',
-                    context={ "message": "No access: You dont have required privileges" },
+                    context={"message": "No access: You dont have required privileges"},
                     status=403
                 )
 
@@ -30,10 +30,9 @@ def user_membership_role(roles: List[str]):
                 return render(
                     request,
                     '403.html',
-                    context={ "message": "No access: You dont have required privileges" },
+                    context={"message": "No access: You dont have required privileges"},
                     status=403
                 )
-
 
             return view_func(request, *args, **kwargs)
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from ..buildings.models import Zone
+from ..authentication.models import User
 
 
 class Camera(models.Model):
@@ -24,6 +25,7 @@ class CameraFeed(models.Model):
     image_path_silhouette = models.ImageField(upload_to="camera_feeds/silhouette/")
     date_uploaded = models.DateTimeField(auto_now=True)
     authorized = models.BooleanField(default=False)
+    detected_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="feed_user", null=True, blank=True)
 
     class Meta:
         constraints = [

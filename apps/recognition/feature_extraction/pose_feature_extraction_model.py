@@ -7,13 +7,15 @@ from .crowdpose import dataset_info
 import math
 import os
 
+
 @singleton
 class PoseFeatureExtractionModel(FeatureExtractionModel):
     def __init__(self):
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        #model_config = 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py'
+        # model_config = 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py'
         model_config = os.path.join(dir_path, 'rtmo-l_16xb16-700e_body7-crowdpose-640x640.py')
-        model_checkpoint = 'https://download.openmmlab.com/mmpose/v1/projects/rtmo/rtmo-l_16xb16-700e_body7-crowdpose-640x640-5bafdc11_20231219.pth'
+        model_checkpoint = ('https://download.openmmlab.com/mmpose/v1/projects/rtmo/rtmo-l_16xb16-700e_body7-crowdpose'
+                            '-640x640-5bafdc11_20231219.pth')
         device = 'cpu'
         self.model = init_model(model_config, model_checkpoint, device=device)
         name_to_keypoint_id = {}

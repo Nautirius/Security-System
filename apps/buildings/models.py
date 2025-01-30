@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Company(models.Model):
     name = models.CharField(max_length=255)
 
@@ -49,4 +48,4 @@ class Zone(models.Model):
     building = models.ForeignKey(Building, on_delete=models.CASCADE, related_name="zones")
 
     def __str__(self):
-        return f"{self.label} ({self.building.label})"
+        return f"{self.label} ({self.building.company} building {self.building.label})"
