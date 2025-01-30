@@ -3,6 +3,8 @@ from .models import Permission
 from apps.authentication.models import UserProfile
 from apps.buildings.models import Zone
 from .forms import PermissionForm, UserPermissionForm, ZonePermissionForm
+from django.contrib.auth.decorators import login_required
+from ..authentication.guards.user_membership_role import user_membership_role
 
 
 def permission_home(request):
@@ -15,6 +17,8 @@ def permission_list(request):
     return render(request, 'permissions/permission_list.html', context)
 
 
+@login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def permission_create(request):
     form = PermissionForm(title="Create new Permission")
     context = {'form': form}
@@ -26,6 +30,8 @@ def permission_create(request):
     return render(request, "permissions/permission_form.html", context)
 
 
+@login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def permission_update(request, pk):
     permission = Permission.objects.get(id=pk)
     form = PermissionForm(instance=permission, title="Edit Permission")
@@ -39,6 +45,8 @@ def permission_update(request, pk):
     return render(request, "permissions/permission_form.html", context)
 
 
+@login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def permission_delete(request, pk):
     permission = Permission.objects.get(id=pk)
     permission.delete()
@@ -51,6 +59,8 @@ def permission_list_users(request):
     return render(request, 'permissions/permission_list_users.html', context)
 
 
+@login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def permission_user_update(request, pk):
     user = UserProfile.objects.get(id=pk)
     form = UserPermissionForm(user=user, title="Edit User Permissions")
@@ -71,6 +81,8 @@ def permission_list_zones(request):
     return render(request, 'permissions/permission_list_zones.html', context)
 
 
+@login_required
+@user_membership_role(roles=['MANAGEMENT', 'ADMIN'])
 def permission_zone_update(request, pk):
     zone = Zone.objects.get(id=pk)
     form = ZonePermissionForm(zone=zone, title="Edit Zone Permissions")
