@@ -11,18 +11,18 @@ ___
 ### Project description
 
 The project is a comprehensive security and access management system designed to help enterprises
-efficiently control and monitor their facilities, users, and security assets. It integrates user authenti-
-cation, role-based access control (RBAC), surveillance camera management, and facial recognition to
-ensure high-security standards and streamlined administration.
-This system is particularly useful for companies managing multiple buildings, restricted zones, and
-large user bases, where security automation, controlled access, and real-time monitoring are critical.
+efficiently control and monitor their facilities, users, and security assets. It integrates user 
+authentication, role-based access control (RBAC), surveillance camera management, and facial recognition
+to ensure high-security standards and streamlined administration.
+This system is particularly useful for companies managing multiple buildings, restricted zones,
+and large user bases, where security automation, controlled access, and real-time monitoring are critical.
 By leveraging modern authentication mechanisms, including OAuth2 with third-party integrations
 (Google, GitHub), and advanced AI-driven facial recognition, the platform ensures both security and
 convenience.
 
 Our project focuses on developing an efficient AI-based security system designed specifically for office
-spaces. By leveraging facial and silhouette recognition, the system verifies employee identities at vari-
-ous access points throughout a facility, creating a secure and streamlined process for managing entry
+spaces. By leveraging facial and silhouette recognition, the system verifies employee identities at various
+access points throughout a facility, creating a secure and streamlined process for managing entry
 and monitoring activities. The primary aim is to establish a robust, real-time, automated verification
 system that safeguards access to restricted areas.
 
