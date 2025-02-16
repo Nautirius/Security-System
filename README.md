@@ -85,9 +85,9 @@ docker compose up --build -d
 #### Run migrations in docker container
 
 ```shell
-docker exec -it web python manage.py migrate
-docker exec -it web python manage.py createsuperuser
-docker exec -it web python manage.py runserver 0.0.0.0:8000
+docker exec -it django python manage.py migrate
+docker exec -it django python manage.py createsuperuser
+docker exec -it django python manage.py runserver 0.0.0.0:8000
 ```
 
 ### Creating new Migrations
