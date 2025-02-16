@@ -29,7 +29,7 @@ system that safeguards access to restricted areas.
 
 The link below provides a brief demo in the form of a guided walkthrough of the user interface:
 
-> Youtube video [link](https://www.youtube.com/watch?v=4WMYv0wn8rE)
+> YouTube video [link](https://www.youtube.com/watch?v=4WMYv0wn8rE)
 
 ### Authors
 
